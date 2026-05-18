@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { width: 320px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; padding: 16px; }
+
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-icon { width: 32px; height: 32px; }
+    .header-title { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+    .header-subtitle { font-size: 11px; color: #666; }
+    .header-subtitle span { color: #0061d5; font-weight: 500; }
+    .settings-btn { background: none; border: none; cursor: pointer; color: #999; font-size: 18px; padding: 4px; }
+    .settings-btn:hover { color: #333; }
+
+    .note-card { background: white; border: 1px solid #e8ecf0; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .note-icon-svg { width: 28px; height: 28px; flex-shrink: 0; }
+    .note-info { flex: 1; min-width: 0; }
+    .note-title { font-size: 13px; font-weight: 600; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .note-meta { font-size: 11px; color: #888; margin-top: 2px; }
+
+    .download-btn { width: 100%; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; border-radius: 8px; background: #3b5cff; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
+    .download-btn:hover { background: #2a4ae0; }
+    .download-btn:disabled { opacity: 0.8; cursor: wait; }
+
+    .footer { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: #999; }
+    .footer a { color: #999; text-decoration: none; cursor: pointer; }
+    .footer a:hover { color: #666; }
+
+    .progress-bar { height: 3px; background: #e0e7ff; border-radius: 2px; margin-top: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #3b5cff; border-radius: 2px; animation: progress 2s ease-in-out infinite; }
+    @keyframes progress { 0%{width:0%} 50%{width:70%} 100%{width:100%} }
+    .dl-status { font-size: 11px; color: #666; margin-top: 8px; text-align: center; }
+
+    .success-check { color: #22c55e; font-size: 13px; margin-bottom: 4px; text-align: center; }
+    .success-file { font-size: 11px; color: #666; margin-bottom: 10px; text-align: center; }
+    .action-btn { width: 100%; padding: 10px; font-size: 13px; cursor: pointer; border: 1px solid #e0e0e0; border-radius: 8px; background: white; color: #333; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
+    .action-btn:hover { background: #f5f5f5; }
+
+    .unsupported-icon, .error-icon { font-size: 32px; text-align: center; margin: 12px 0 8px; }
+    .error-title { font-size: 14px; font-weight: 600; color: #1a1a1a; text-align: center; margin-bottom: 4px; }
+    .error-desc { font-size: 12px; color: #888; text-align: center; margin-bottom: 12px; line-height: 1.5; }
+
+    /* Settings */
+    .settings-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .settings-header h2 { font-size: 16px; font-weight: 700; }
+    .settings-header small { font-size: 11px; color: #888; }
+    .settings-back { background: none; border: none; font-size: 18px; cursor: pointer; color: #333; }
+
+    .setting-section { margin-bottom: 16px; }
+    .setting-label { font-size: 12px; font-weight: 600; color: #555; margin-bottom: 8px; }
+
+    .format-options { display: flex; gap: 8px; }
+    .format-option { flex: 1; padding: 8px 4px; border: 1.5px solid #e0e0e0; border-radius: 8px; text-align: center; cursor: pointer; font-size: 12px; font-weight: 500; background: white; transition: all 0.15s; }
+    .format-option.active { border-color: #3b5cff; color: #3b5cff; background: #f0f4ff; }
+    .format-option small { display: block; font-size: 10px; color: #999; font-weight: 400; margin-top: 2px; }
+    .format-option.active small { color: #3b5cff; }
+
+    .setting-input { width: 100%; padding: 8px 10px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 12px; font-family: monospace; }
+    .setting-hint { font-size: 10px; color: #999; margin-top: 4px; }
+
+    .setting-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-row-text { flex: 1; }
+    .setting-row-title { font-size: 12px; font-weight: 500; color: #333; }
+    .setting-row-desc { font-size: 10px; color: #999; margin-top: 1px; }
+
+    .toggle { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; inset: 0; background: #ccc; border-radius: 20px; cursor: pointer; transition: 0.2s; }
+    .toggle-slider:before { content: ""; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px; background: white; border-radius: 50%; transition: 0.2s; }
+    .toggle input:checked + .toggle-slider { background: #3b5cff; }
+    .toggle input:checked + .toggle-slider:before { transform: translateX(16px); }
+
+    .state { display: none; }
+    .state.active { display: block; }
+  </style>
+</head>
+<body>
+  <!-- ===== IDLE ===== -->
+  <div id="state-idle" class="state active">
+    <div class="header">
+      <div class="header-left">
+        <img class="header-icon" src="icons/icon48.png" alt="">
+        <div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div>
+      </div>
+      <button class="settings-btn" id="btn-settings">⚙</button>
+    </div>
+    <div class="note-card">
+      <svg class="note-icon-svg" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#0061d5" stroke-width="1.5"/><path d="M8 7h8M8 11h8M8 15h5" stroke="#0061d5" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div class="note-info"><div class="note-title" id="note-title">読み込み中...</div><div class="note-meta"><span id="note-type">BoxNote</span> ・ <span id="note-meta-text">確認中</span></div></div>
+    </div>
+    <button class="download-btn" id="btn-download">⬇ Markdownでダウンロード</button>
+    <div class="footer"><a id="history-link">最近のDL履歴</a><span>v1.0.0</span></div>
+  </div>
+
+  <!-- ===== DOWNLOADING ===== -->
+  <div id="state-downloading" class="state">
+    <div class="header">
+      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div></div>
+      <button class="settings-btn" disabled>⚙</button>
+    </div>
+    <div class="note-card">
+      <svg class="note-icon-svg" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#0061d5" stroke-width="1.5"/><path d="M8 7h8M8 11h8M8 15h5" stroke="#0061d5" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div class="note-info"><div class="note-title" id="dl-note-title">-</div><div class="note-meta">BoxNote</div></div>
+    </div>
+    <button class="download-btn" disabled>↻ ダウンロード中...</button>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="dl-status" id="dl-status">添付ファイルを取得しています</div>
+  </div>
+
+  <!-- ===== SUCCESS ===== -->
+  <div id="state-success" class="state">
+    <div class="header">
+      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div></div>
+      <button class="settings-btn" id="btn-settings-success">⚙</button>
+    </div>
+    <div class="note-card">
+      <svg class="note-icon-svg" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#0061d5" stroke-width="1.5"/><path d="M8 7h8M8 11h8M8 15h5" stroke="#0061d5" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div class="note-info"><div class="note-title" id="success-note-title">-</div><div class="note-meta">BoxNote</div></div>
+    </div>
+    <div class="success-check">✓ 保存しました</div>
+    <div class="success-file" id="success-file">-</div>
+    <button class="action-btn" id="btn-open">📂 開く</button>
+  </div>
+
+  <!-- ===== UNSUPPORTED ===== -->
+  <div id="state-unsupported" class="state">
+    <div class="header">
+      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div></div>
+      <button class="settings-btn" id="btn-settings-unsupported">⚙</button>
+    </div>
+    <div class="error-icon">⚠️</div>
+    <div class="error-title">BoxNoteを開いてください</div>
+    <div class="error-desc">このタブはBoxNoteではありません。</div>
+    <a class="action-btn" href="https://app.box.com" target="_blank">Boxを開く ↗</a>
+  </div>
+
+  <!-- ===== ERROR ===== -->
+  <div id="state-error" class="state">
+    <div class="header">
+      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div></div>
+      <button class="settings-btn" id="btn-settings-error">⚙</button>
+    </div>
+    <div class="note-card">
+      <svg class="note-icon-svg" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#0061d5" stroke-width="1.5"/><path d="M8 7h8M8 11h8M8 15h5" stroke="#0061d5" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div class="note-info"><div class="note-title" id="error-note-title">-</div><div class="note-meta">BoxNote</div></div>
+    </div>
+    <div class="error-icon" id="error-icon-display">⚠️</div>
+    <div class="error-title" id="error-title">エラー</div>
+    <div class="error-desc" id="error-desc">-</div>
+    <button class="action-btn" id="error-action-btn">再試行</button>
+  </div>
+
+  <!-- ===== SETTINGS ===== -->
+  <div id="state-settings" class="state">
+    <div class="settings-header">
+      <button class="settings-back" id="btn-back">←</button>
+      <div><h2>設定</h2><small>SETTINGS</small></div>
+    </div>
+
+    <div class="setting-section">
+      <div class="setting-label">出力フォーマット</div>
+      <div class="format-options">
+        <div class="format-option active" data-format="md"><strong>.md</strong><small>Markdown</small></div>
+        <div class="format-option" data-format="html"><strong>.html</strong><small>HTML</small></div>
+        <div class="format-option" data-format="txt"><strong>.txt</strong><small>プレーン</small></div>
+      </div>
+    </div>
+
+    <div class="setting-section">
+      <div class="setting-label">ファイル名パターン</div>
+      <input class="setting-input" id="setting-filename" value="{title}_{yyyy-mm-dd}">
+      <div class="setting-hint" id="filename-preview">例: 月次レビュー_2026-05-18.md</div>
+    </div>
+
+    <div class="setting-section">
+      <div class="setting-row">
+        <div class="setting-row-text"><div class="setting-row-title">添付ファイルを含める</div><div class="setting-row-desc">画像 / PDFをZIPでまとめる</div></div>
+        <label class="toggle"><input type="checkbox" id="setting-include-assets" checked><span class="toggle-slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-text"><div class="setting-row-title">DL後に自動で開</div><div class="setting-row-desc">既定のアプリで開く</div></div>
+        <label class="toggle"><input type="checkbox" id="setting-auto-open"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-text"><div class="setting-row-title">完了通知</div><div class="setting-row-desc">Chrome通知を表示</div></div>
+        <label class="toggle"><input type="checkbox" id="setting-notification" checked><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="footer"><a href="#">ヘルプ</a><span>v1.0.0</span></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

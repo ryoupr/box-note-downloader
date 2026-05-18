@@ -1,0 +1,29 @@
+# AI development files
+.kiro/
+CLAUDE.md
+
+# Build artifacts
+*.zip
+temp-chrome-extension/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+
+# Node (if ever used)
+node_modules/
+package-lock.json
+
+# Screenshots (may contain sensitive content)
+screenshot/*.png
+!screenshot/.gitkeep
+
+# Sensitive / personal
+*.env
+*.key
+*.pem

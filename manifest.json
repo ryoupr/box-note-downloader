@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "BoxNote DL",
+  "version": "1.0.0",
+  "description": "Download Box Notes as Markdown with images",
+  "permissions": ["activeTab", "downloads", "webNavigation", "storage"],
+  "host_permissions": ["https://*.app.box.com/*", "https://notes.services.box.com/*"],
+  "icons": {
+    "16": "icons/icon16.png",
+    "19": "icons/icon19.png",
+    "32": "icons/icon32.png",
+    "38": "icons/icon38.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.app.box.com/notes/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    },
+    {
+      "matches": ["https://notes.services.box.com/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
