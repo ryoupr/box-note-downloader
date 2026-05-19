@@ -29,26 +29,18 @@
         const src = iframe.src || "";
         if (src.includes("notes.services.box.com")) {
           console.log("[BoxNote CS] Found notes iframe:", src);
-          // Extract session token from iframe URL
           const urlObj = new URL(src);
-          const session = urlObj.searchParams.get("s") || "";
-          const noteId = src.match(/\/(\d+)\?/)?.[1] || "";
-          return { success: true, iframeSrc: src, session, noteId };
+          return {
+            success: true,
+            iframeSrc: src,
+            fileId: urlObj.searchParams.get("fileId") || "",
+            authCode: urlObj.searchParams.get("authCode") || "",
+            sharedLink: urlObj.searchParams.get("sharedLink") || "",
+            hostname: urlObj.searchParams.get("hostname") || "",
+          };
         }
       }
 
-      // Also check for session in page scripts
-      const scripts = document.querySelectorAll("script");
-      for (const s of scripts) {
-        const text = s.textContent || "";
-        const match = text.match(/["']s["']\s*:\s*["']([a-z0-9]+)["']/);
-        if (match) {
-          console.log("[BoxNote CS] Found session in script:", match[1]);
-          return { success: true, session: match[1] };
-        }
-      }
-
-      // Try to find in network requests or config
       console.log("[BoxNote CS] No iframe found, iframes count:", iframes.length);
       return { success: false, error: "No notes iframe found", iframeCount: iframes.length };
     } catch (e) {

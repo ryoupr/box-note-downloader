@@ -31,18 +31,40 @@ async function handleDownload(settings, fileId) {
     }
 
     // Fetch boxnote from notes.services.box.com (no CORS in background)
-    const notesUrl = `https://notes.services.box.com/1.0/notes/${fileId}?s=${sessionInfo.session}`;
-    console.log("[BoxNote] Fetching from notes service:", notesUrl);
+    // Try multiple endpoint patterns
+    const { authCode, sharedLink, fileId: noteFileId } = sessionInfo;
+    const endpoints = [
+      `https://notes.services.box.com/1.0/notes/${fileId}?authCode=${authCode}`,
+      `https://notes.services.box.com/p/note?fileId=${fileId}&authCode=${authCode}`,
+      `https://notes.services.box.com/api/notes/${fileId}?authCode=${authCode}`,
+    ];
 
-    const resp = await fetch(notesUrl);
-    console.log("[BoxNote] Notes service response:", resp.status);
-
-    if (!resp.ok) {
-      if (resp.status === 401 || resp.status === 403) return { success: false, error: "auth" };
-      return { success: false, error: `network: HTTP ${resp.status}` };
+    let boxnote = null;
+    for (const url of endpoints) {
+      console.log("[BoxNote] Trying:", url);
+      try {
+        const resp = await fetch(url);
+        console.log("[BoxNote] Response:", resp.status, resp.headers.get("content-type"));
+        if (resp.ok) {
+          const text = await resp.text();
+          console.log("[BoxNote] Body length:", text.length, "preview:", text.slice(0, 200));
+          try {
+            boxnote = JSON.parse(text);
+            console.log("[BoxNote] Got JSON, keys:", Object.keys(boxnote));
+            break;
+          } catch {
+            console.log("[BoxNote] Not JSON");
+          }
+        }
+      } catch (e) {
+        console.log("[BoxNote] Fetch error:", e.message);
+      }
     }
 
-    const boxnote = await resp.json();
+    if (!boxnote) {
+      return { success: false, error: "All API endpoints failed" };
+    }
+
     console.log("[BoxNote] Got boxnote JSON, keys:", Object.keys(boxnote));
 
     // 3. Convert ProseMirror JSON → Markdown
