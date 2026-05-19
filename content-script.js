@@ -68,7 +68,7 @@
 
     return { markdown: markdown.trim(), images: imageRefs, title, debug: { directImgCount: directImgs.length, convertedImgCount: images.length } };
 
-    function convertNode(node) {
+    function convertNode(node, indent = 0) {
       if (node.nodeType === Node.TEXT_NODE) return node.textContent || "";
       if (node.nodeType !== Node.ELEMENT_NODE) return "";
 
@@ -78,7 +78,7 @@
       if (shouldSkip(el)) return "";
 
       const tag = el.tagName.toLowerCase();
-      const children = () => Array.from(el.childNodes).map(convertNode).join("");
+      const children = () => Array.from(el.childNodes).map(n => convertNode(n, indent)).join("");
 
       // Box Notes native image (must check before tag-based dispatch)
       if (el.classList.contains("image-node-view") || el.getAttribute("data-component-type") === "image") {
@@ -139,21 +139,53 @@
         if (el.classList.contains("check-list")) {
           return Array.from(el.children).map((li) => {
             const checked = li.classList.contains("is-checked") ? "x" : " ";
-            // Skip checkbox container, only get text content
-            const text = Array.from(li.childNodes).filter(n => !n.matches?.(".check-list-item-checkbox-container")).map(convertNode).join("").trim();
-            return `- [${checked}] ${text}`;
-          }).join("\n") + "\n\n";
+            const text = Array.from(li.childNodes).filter(n => !n.matches?.(".check-list-item-checkbox-container")).map(n => convertNode(n, indent + 1)).join("").trim();
+            return `${"  ".repeat(indent)}- [${checked}] ${text}`;
+          }).join("\n") + (indent === 0 ? "\n\n" : "\n");
         }
-        return Array.from(el.children).map((li) => `- ${convertNode(li).trim()}`).join("\n") + "\n\n";
+        return Array.from(el.children).map((li) => {
+          const parts = convertListItem(li, indent);
+          return parts;
+        }).join("\n") + (indent === 0 ? "\n\n" : "\n");
       }
-      if (tag === "ol") return Array.from(el.children).map((li, i) => `${i + 1}. ${convertNode(li).trim()}`).join("\n") + "\n\n";
-      if (tag === "li") return children();
+      if (tag === "ol") {
+        return Array.from(el.children).map((li, i) => {
+          const parts = convertListItem(li, indent, i + 1);
+          return parts;
+        }).join("\n") + (indent === 0 ? "\n\n" : "\n");
+      }
+      if (tag === "li") return Array.from(el.childNodes).map(n => convertNode(n, indent)).join("");
       if (tag === "blockquote") return children().trim().split("\n").map((l) => `> ${l}`).join("\n") + "\n\n";
       if (tag === "pre") return `\`\`\`\n${el.querySelector("code")?.textContent || el.textContent || ""}\n\`\`\`\n\n`;
       if (tag === "hr") return "---\n\n";
       if (tag === "br") return "\n";
       if (tag === "table") return convertTable(el);
       return children();
+    }
+
+    function convertListItem(li, indent, num) {
+      const prefix = num ? `${num}. ` : "- ";
+      const pad = "  ".repeat(indent);
+      const lines = [];
+      let textParts = [];
+
+      for (const child of li.childNodes) {
+        const tag = child.tagName?.toLowerCase();
+        if (tag === "ul" || tag === "ol") {
+          // Flush text, then recurse nested list
+          if (textParts.length) {
+            lines.push(`${pad}${prefix}${textParts.join("").trim()}`);
+            textParts = [];
+          }
+          lines.push(convertNode(child, indent + 1).trimEnd());
+        } else {
+          textParts.push(convertNode(child, indent));
+        }
+      }
+      if (textParts.length) {
+        lines.push(`${pad}${prefix}${textParts.join("").trim()}`);
+      }
+      return lines.join("\n");
     }
 
     function convertTable(table) {
