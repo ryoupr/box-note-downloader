@@ -1,5 +1,5 @@
-// Box Note to Markdown - Content Script (API-based)
-// Fetches .boxnote JSON via Box's internal web API (same-origin, cookie auth)
+// Box Note to Markdown - Content Script
+// Extracts notes session info from the page for Background to use
 (() => {
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (msg.action === "getInfo") {
@@ -10,9 +10,9 @@
       sendResponse({ fileId, title });
     }
 
-    if (msg.action === "fetchBoxnote") {
-      fetchBoxnoteContent(msg.fileId).then(sendResponse);
-      return true; // async
+    if (msg.action === "getNotesSession") {
+      getNotesSession().then(sendResponse);
+      return true;
     }
 
     if (msg.action === "fetchImage") {
@@ -20,6 +20,41 @@
       return true;
     }
   });
+
+  async function getNotesSession() {
+    try {
+      // Find the notes iframe to get session params
+      const iframes = document.querySelectorAll("iframe");
+      for (const iframe of iframes) {
+        const src = iframe.src || "";
+        if (src.includes("notes.services.box.com")) {
+          console.log("[BoxNote CS] Found notes iframe:", src);
+          // Extract session token from iframe URL
+          const urlObj = new URL(src);
+          const session = urlObj.searchParams.get("s") || "";
+          const noteId = src.match(/\/(\d+)\?/)?.[1] || "";
+          return { success: true, iframeSrc: src, session, noteId };
+        }
+      }
+
+      // Also check for session in page scripts
+      const scripts = document.querySelectorAll("script");
+      for (const s of scripts) {
+        const text = s.textContent || "";
+        const match = text.match(/["']s["']\s*:\s*["']([a-z0-9]+)["']/);
+        if (match) {
+          console.log("[BoxNote CS] Found session in script:", match[1]);
+          return { success: true, session: match[1] };
+        }
+      }
+
+      // Try to find in network requests or config
+      console.log("[BoxNote CS] No iframe found, iframes count:", iframes.length);
+      return { success: false, error: "No notes iframe found", iframeCount: iframes.length };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
 
   async function fetchImageAsBase64(url) {
     try {
@@ -32,70 +67,5 @@
         reader.readAsDataURL(blob);
       });
     } catch { return { data: null }; }
-  }
-
-  async function fetchBoxnoteContent(fileId) {
-    try {
-      console.log("[BoxNote CS] Fetching boxnote content for:", fileId);
-
-      // Method 1: Try Box's internal download endpoint (same-origin, cookie auth)
-      // The .boxnote file content can be fetched via the standard download URL
-      const downloadUrl = `https://${window.location.hostname}/index.php?rm=box_download_file&file_id=${fileId}`;
-      console.log("[BoxNote CS] Trying download URL:", downloadUrl);
-
-      let resp = await fetch(downloadUrl, { credentials: "same-origin" });
-      console.log("[BoxNote CS] Download response:", resp.status, resp.headers.get("content-type"));
-
-      if (resp.ok) {
-        const text = await resp.text();
-        console.log("[BoxNote CS] Got content, length:", text.length, "preview:", text.slice(0, 100));
-        try {
-          const json = JSON.parse(text);
-          return { success: true, boxnote: json };
-        } catch {
-          // Might be a redirect or HTML page
-          console.log("[BoxNote CS] Not JSON, trying alternative...");
-        }
-      }
-
-      // Method 2: Try the /api endpoint
-      const apiUrl = `https://${window.location.hostname}/api/2.0/files/${fileId}/content`;
-      console.log("[BoxNote CS] Trying API URL:", apiUrl);
-      resp = await fetch(apiUrl, { credentials: "same-origin" });
-      console.log("[BoxNote CS] API response:", resp.status, resp.headers.get("content-type"));
-
-      if (resp.ok) {
-        const text = await resp.text();
-        console.log("[BoxNote CS] Got content, length:", text.length, "preview:", text.slice(0, 100));
-        try {
-          const json = JSON.parse(text);
-          return { success: true, boxnote: json };
-        } catch {
-          console.log("[BoxNote CS] Not JSON from API endpoint");
-        }
-      }
-
-      // Method 3: Try notes.services.box.com endpoint
-      const notesUrl = `https://notes.services.box.com/1.0/notes/${fileId}`;
-      console.log("[BoxNote CS] Trying notes service URL:", notesUrl);
-      resp = await fetch(notesUrl, { credentials: "include" });
-      console.log("[BoxNote CS] Notes service response:", resp.status, resp.headers.get("content-type"));
-
-      if (resp.ok) {
-        const text = await resp.text();
-        console.log("[BoxNote CS] Got content, length:", text.length, "preview:", text.slice(0, 100));
-        try {
-          const json = JSON.parse(text);
-          return { success: true, boxnote: json };
-        } catch {
-          console.log("[BoxNote CS] Not JSON from notes service");
-        }
-      }
-
-      return { success: false, error: `All methods failed. Last status: ${resp.status}` };
-    } catch (e) {
-      console.error("[BoxNote CS] Error:", e);
-      return { success: false, error: e.message };
-    }
   }
 })();

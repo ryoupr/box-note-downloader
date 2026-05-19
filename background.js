@@ -22,14 +22,27 @@ async function handleDownload(settings, fileId) {
     const noteTitle = tab.title?.replace(/ - Box$/, "").trim() || "untitled";
     console.log("[BoxNote] Title:", noteTitle);
 
-    const result = await chrome.tabs.sendMessage(tab.id, { action: "fetchBoxnote", fileId });
-    console.log("[BoxNote] Content Script result:", result?.success, result?.error);
+    // Get session info from Content Script
+    const sessionInfo = await chrome.tabs.sendMessage(tab.id, { action: "getNotesSession" });
+    console.log("[BoxNote] Session info:", JSON.stringify(sessionInfo));
 
-    if (!result?.success) {
-      return { success: false, error: result?.error || "Failed to fetch boxnote content" };
+    if (!sessionInfo?.success) {
+      return { success: false, error: "Could not find notes session: " + (sessionInfo?.error || "unknown") };
     }
 
-    const boxnote = result.boxnote;
+    // Fetch boxnote from notes.services.box.com (no CORS in background)
+    const notesUrl = `https://notes.services.box.com/1.0/notes/${fileId}?s=${sessionInfo.session}`;
+    console.log("[BoxNote] Fetching from notes service:", notesUrl);
+
+    const resp = await fetch(notesUrl);
+    console.log("[BoxNote] Notes service response:", resp.status);
+
+    if (!resp.ok) {
+      if (resp.status === 401 || resp.status === 403) return { success: false, error: "auth" };
+      return { success: false, error: `network: HTTP ${resp.status}` };
+    }
+
+    const boxnote = await resp.json();
     console.log("[BoxNote] Got boxnote JSON, keys:", Object.keys(boxnote));
 
     // 3. Convert ProseMirror JSON → Markdown
