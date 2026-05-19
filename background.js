@@ -40,7 +40,7 @@ async function handleDownload(settings) {
       try {
         const r = await chrome.tabs.sendMessage(tab.id, { action: "convert" }, { frameId: frame.frameId });
         if (r?.markdown && !r.markdown.includes("Could not find")) {
-          console.log("[BoxNote] Content from frame", frame.frameId, "("+frame.url?.slice(0,40)+")", "md:", r.markdown.length, "images:", r.images.length);
+          console.log("[BoxNote] Content from frame", frame.frameId, "("+frame.url?.slice(0,40)+")", "md:", r.markdown.length, "images:", r.images.length, "debug:", JSON.stringify(r.debug));
           // Prefer result with images
           if (!result || r.images.length > result.images.length) {
             result = r;
@@ -65,9 +65,18 @@ async function handleDownload(settings) {
       .replace(/[<>:"/\\|?*]/g, "_")
       .slice(0, 100);
 
-    console.log("[BoxNote] Saving as:", safeName, "images:", images.length, "includeAssets:", includeAssets);
+    // Filter images: only those with data, log errors
+    const successImages = [];
+    for (const img of images) {
+      if (img.data) {
+        successImages.push(img);
+      } else {
+        console.log("[BoxNote] Image fetch failed:", img.filename, img.error, img.url?.slice(0, 80));
+      }
+    }
+    console.log("[BoxNote] Images: total:", images.length, "success:", successImages.length);
 
-    const hasImages = includeAssets && images.length > 0;
+    const hasImages = includeAssets && successImages.length > 0;
 
     if (!hasImages) {
       const dataUrl = "data:text/markdown;base64," + btoa(unescape(encodeURIComponent(markdown)));
@@ -81,7 +90,7 @@ async function handleDownload(settings) {
       folder.file(`${safeName}.${format}`, markdown);
       const assets = folder.folder("assets");
 
-      for (const img of images) {
+      for (const img of successImages) {
         assets.file(img.filename, img.data, { base64: true });
         console.log("[BoxNote] Added image:", img.filename);
       }

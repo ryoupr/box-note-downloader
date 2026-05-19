@@ -61,23 +61,24 @@
     const resolvedImages = [];
     for (const img of images) {
       try {
-        console.log("[BoxNote CS] Fetching image:", img.filename, img.url.slice(0, 80));
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 10000);
         const resp = await fetch(img.url, { credentials: "include", signal: controller.signal });
         clearTimeout(timeout);
-        console.log("[BoxNote CS] Image response:", resp.status);
         if (resp.ok) {
           const blob = await resp.blob();
           const base64 = await blobToBase64(blob);
           resolvedImages.push({ filename: img.filename, data: base64 });
+        } else {
+          // Return URL so background can try
+          resolvedImages.push({ filename: img.filename, url: img.url, error: `HTTP ${resp.status}` });
         }
       } catch (e) {
-        console.log("[BoxNote CS] Image fetch failed:", img.filename, e.message);
+        resolvedImages.push({ filename: img.filename, url: img.url, error: e.message });
       }
     }
 
-    return { markdown: markdown.trim(), images: resolvedImages, title };
+    return { markdown: markdown.trim(), images: resolvedImages, title, debug: { directImgCount: directImgs.length, convertedImgCount: images.length } };
 
     function convertNode(node) {
       if (node.nodeType === Node.TEXT_NODE) return node.textContent || "";
