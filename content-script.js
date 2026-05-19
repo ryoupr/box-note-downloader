@@ -48,6 +48,9 @@
     }
 
     const markdown = convertNode(editor);
+    console.log("[BoxNote CS] Conversion done. Images found:", images.length);
+    console.log("[BoxNote CS] image-node-views in DOM:", editor.querySelectorAll('.image-node-view, [data-component-type="image"]').length);
+    console.log("[BoxNote CS] img[data-testid=img-element]:", editor.querySelectorAll('img[data-testid="img-element"]').length);
 
     // Fetch images as base64 from content script (same-origin)
     const resolvedImages = [];
@@ -76,15 +79,7 @@
       const tag = el.tagName.toLowerCase();
       const children = () => Array.from(el.childNodes).map(convertNode).join("");
 
-      if (/^h[1-6]$/.test(tag)) return `${"#".repeat(+tag[1])} ${children().trim()}\n\n`;
-      if (tag === "p") { const t = children(); return t.trim() ? `${t}\n\n` : "\n"; }
-      if (tag === "strong" || tag === "b") return `**${children()}**`;
-      if (tag === "em" || tag === "i") return `*${children()}*`;
-      if (tag === "code" && el.parentElement?.tagName.toLowerCase() !== "pre") return `\`${children()}\``;
-      if (tag === "s" || tag === "del") return `~~${children()}~~`;
-      if (tag === "a") return `[${children()}](${el.getAttribute("href") || ""})`;
-
-      // Box Notes native image (image-node-view)
+      // Box Notes native image (must check before tag-based dispatch)
       if (el.classList.contains("image-node-view") || el.getAttribute("data-component-type") === "image") {
         const imgEl = el.querySelector('img[data-testid="img-element"]') || el.querySelector("img:not(.avatar-image)");
         if (imgEl) {
@@ -99,6 +94,14 @@
         }
         return "";
       }
+
+      if (/^h[1-6]$/.test(tag)) return `${"#".repeat(+tag[1])} ${children().trim()}\n\n`;
+      if (tag === "p") { const t = children(); return t.trim() ? `${t}\n\n` : "\n"; }
+      if (tag === "strong" || tag === "b") return `**${children()}**`;
+      if (tag === "em" || tag === "i") return `*${children()}*`;
+      if (tag === "code" && el.parentElement?.tagName.toLowerCase() !== "pre") return `\`${children()}\``;
+      if (tag === "s" || tag === "del") return `~~${children()}~~`;
+      if (tag === "a") return `[${children()}](${el.getAttribute("href") || ""})`;
 
       // Embedded file preview (box-preview-node)
       if (el.classList.contains("box-preview-node")) {
