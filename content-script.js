@@ -15,16 +15,8 @@
       return true;
     }
     if (msg.action === "dumpDOM") {
-      const editor = document.querySelector(".ProseMirror") || document.querySelector('[contenteditable="true"]');
-      if (!editor) { sendResponse({ html: "No editor found" }); return; }
-      const elements = editor.querySelectorAll("*");
-      const classSet = new Set();
-      elements.forEach((el) => {
-        if (el.className && typeof el.className === "string") {
-          classSet.add(`<${el.tagName.toLowerCase()} class="${el.className}">`);
-        }
-      });
-      sendResponse({ classes: [...classSet].sort(), html: editor.innerHTML.slice(0, 5000) });
+      const html = document.documentElement.outerHTML;
+      sendResponse({ fullHtml: html });
       return;
     }
     if (msg.action === "getTitle") {
