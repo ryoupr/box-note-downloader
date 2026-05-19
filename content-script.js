@@ -136,23 +136,11 @@
       }
 
       if (tag === "ul") {
-        if (el.classList.contains("check-list")) {
-          return Array.from(el.children).map((li) => {
-            const checked = li.classList.contains("is-checked") ? "x" : " ";
-            const text = Array.from(li.childNodes).filter(n => !n.matches?.(".check-list-item-checkbox-container")).map(n => convertNode(n, indent + 1)).join("").trim();
-            return `${"  ".repeat(indent)}- [${checked}] ${text}`;
-          }).join("\n") + (indent === 0 ? "\n\n" : "\n");
-        }
-        return Array.from(el.children).map((li) => {
-          const parts = convertListItem(li, indent);
-          return parts;
-        }).join("\n") + (indent === 0 ? "\n\n" : "\n");
+        const isCheck = el.classList.contains("check-list");
+        return convertList(el, indent, isCheck ? "check" : "bullet");
       }
       if (tag === "ol") {
-        return Array.from(el.children).map((li, i) => {
-          const parts = convertListItem(li, indent, i + 1);
-          return parts;
-        }).join("\n") + (indent === 0 ? "\n\n" : "\n");
+        return convertList(el, indent, "ordered");
       }
       if (tag === "li") return Array.from(el.childNodes).map(n => convertNode(n, indent)).join("");
       if (tag === "blockquote") return children().trim().split("\n").map((l) => `> ${l}`).join("\n") + "\n\n";
@@ -163,29 +151,41 @@
       return children();
     }
 
-    function convertListItem(li, indent, num) {
-      const prefix = num ? `${num}. ` : "- ";
+    function convertList(ul, indent, type) {
       const pad = "  ".repeat(indent);
       const lines = [];
-      let textParts = [];
+      let ordIdx = 0;
+      const kids = Array.from(ul.children);
 
-      for (const child of li.childNodes) {
-        const tag = child.tagName?.toLowerCase();
-        if (tag === "ul" || tag === "ol") {
-          // Flush text, then recurse nested list
-          if (textParts.length) {
-            lines.push(`${pad}${prefix}${textParts.join("").trim()}`);
-            textParts = [];
+      for (let i = 0; i < kids.length; i++) {
+        const child = kids[i];
+        const childTag = child.tagName?.toLowerCase();
+
+        if (childTag === "li") {
+          ordIdx++;
+          let prefix;
+          if (type === "check") {
+            const checked = child.classList.contains("is-checked") ? "x" : " ";
+            prefix = `- [${checked}] `;
+          } else if (type === "ordered") {
+            prefix = `${ordIdx}. `;
+          } else {
+            prefix = "- ";
           }
-          lines.push(convertNode(child, indent + 1).trimEnd());
-        } else {
-          textParts.push(convertNode(child, indent));
+
+          // Get li text (skip checkbox container)
+          const text = Array.from(child.childNodes)
+            .filter(n => !n.matches?.(".check-list-item-checkbox-container"))
+            .map(n => convertNode(n, indent))
+            .join("").trim();
+          lines.push(`${pad}${prefix}${text}`);
+        } else if (childTag === "ul" || childTag === "ol") {
+          // Sibling sub-list = nested indent
+          const subType = child.classList?.contains("check-list") ? "check" : (childTag === "ol" ? "ordered" : "bullet");
+          lines.push(convertList(child, indent + 1, subType).trimEnd());
         }
       }
-      if (textParts.length) {
-        lines.push(`${pad}${prefix}${textParts.join("").trim()}`);
-      }
-      return lines.join("\n");
+      return lines.join("\n") + (indent === 0 ? "\n\n" : "\n");
     }
 
     function convertTable(table) {
