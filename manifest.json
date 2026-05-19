@@ -3,7 +3,7 @@
   "name": "BoxNote DL",
   "version": "1.0.0",
   "description": "Download Box Notes as Markdown with images",
-  "permissions": ["activeTab", "downloads", "storage"],
+  "permissions": ["activeTab", "downloads", "storage", "cookies"],
   "host_permissions": ["https://*.app.box.com/*", "https://notes.services.box.com/*", "https://api.box.com/*"],
   "icons": {
     "16": "icons/icon16.png",

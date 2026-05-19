@@ -26,18 +26,11 @@ async function saveSettings(s) {
     return;
   }
 
-  try {
-    const result = await chrome.tabs.sendMessage(tab.id, { action: "getTitle" }, { frameId: 0 });
-    if (result?.title) {
-      document.getElementById("note-title").textContent = result.title;
-      document.getElementById("note-meta-text").textContent = "更新 数分前";
-    }
-  } catch {
-    document.getElementById("note-title").textContent = tab.title?.replace(/ - Box$/, "") || "Box Note";
-    document.getElementById("note-meta-text").textContent = "";
-  }
+  // Extract title from tab title (no need for content script)
+  const title = tab.title?.replace(/ - Box$/, "").trim() || "Box Note";
+  document.getElementById("note-title").textContent = title;
+  document.getElementById("note-meta-text").textContent = "準備完了";
 
-  // Load settings into UI
   const s = await loadSettings();
   applySettingsToUI(s);
   updateHeaderFormat(s.format);

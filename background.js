@@ -15,22 +15,22 @@ async function handleDownload(settings, fileId) {
     if (!fileId) return { success: false, error: "No file ID found in URL" };
     console.log("[BoxNote] Fetching file:", fileId);
 
-    // 1. Get file info (title)
-    const infoResp = await fetch(`https://api.box.com/2.0/files/${fileId}`, { credentials: "include" });
-    if (!infoResp.ok) {
-      if (infoResp.status === 401 || infoResp.status === 403) return { success: false, error: "auth" };
-      if (infoResp.status === 429) return { success: false, error: "rate" };
-      return { success: false, error: `network: HTTP ${infoResp.status}` };
-    }
-    const fileInfo = await infoResp.json();
-    const noteTitle = fileInfo.name?.replace(/\.boxnote$/, "") || "untitled";
+    // Get boxnote content via Content Script (same-origin fetch)
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab?.id) return { success: false, error: "No active tab" };
+
+    const noteTitle = tab.title?.replace(/ - Box$/, "").trim() || "untitled";
     console.log("[BoxNote] Title:", noteTitle);
 
-    // 2. Download .boxnote content (ProseMirror JSON)
-    const contentResp = await fetch(`https://api.box.com/2.0/files/${fileId}/content`, { credentials: "include" });
-    if (!contentResp.ok) return { success: false, error: `network: content HTTP ${contentResp.status}` };
-    const boxnote = await contentResp.json();
-    console.log("[BoxNote] Got boxnote JSON, nodes:", boxnote.doc?.content?.length);
+    const result = await chrome.tabs.sendMessage(tab.id, { action: "fetchBoxnote", fileId });
+    console.log("[BoxNote] Content Script result:", result?.success, result?.error);
+
+    if (!result?.success) {
+      return { success: false, error: result?.error || "Failed to fetch boxnote content" };
+    }
+
+    const boxnote = result.boxnote;
+    console.log("[BoxNote] Got boxnote JSON, keys:", Object.keys(boxnote));
 
     // 3. Convert ProseMirror JSON → Markdown
     const { markdown, images } = convertBoxnoteToMarkdown(boxnote);
@@ -60,13 +60,12 @@ async function handleDownload(settings, fileId) {
       folder.file(`${safeName}.${format}`, markdown);
       const assets = folder.folder("assets");
 
-      // Download images
+      // Download images via content script (same-origin)
       for (const img of images) {
         try {
-          const resp = await fetch(img.url, { credentials: "include" });
-          if (resp.ok) {
-            const blob = await resp.blob();
-            assets.file(img.filename, blob);
+          const imgResult = await chrome.tabs.sendMessage(tab.id, { action: "fetchImage", url: img.url });
+          if (imgResult?.data) {
+            assets.file(img.filename, imgResult.data, { base64: true });
             console.log("[BoxNote] Image OK:", img.filename);
           }
         } catch (e) {
