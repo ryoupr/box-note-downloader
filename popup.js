@@ -176,3 +176,28 @@ function updateFilenamePreview(pattern, format) {
 
 // History link
 document.getElementById("history-link")?.addEventListener("click", () => chrome.downloads.showDefaultFolder());
+
+// === DOM Debug ===
+document.getElementById("btn-debug-dom")?.addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab?.id) return alert("No active tab");
+
+  // Get all frames to find the notes iframe
+  const frames = await chrome.webNavigation.getAllFrames({ tabId: tab.id });
+  const notesFrame = frames.find(f => f.url.includes("notes.services.box.com"));
+
+  if (!notesFrame) {
+    alert("Notes iframe not found. Frames:\n" + frames.map(f => f.url.slice(0, 80)).join("\n"));
+    return;
+  }
+
+  try {
+    const result = await chrome.tabs.sendMessage(tab.id, { action: "dumpDOM" }, { frameId: notesFrame.frameId });
+    console.log("[Debug] DOM dump result:", result);
+    if (result?.classes) console.log("[Debug] Classes:\n" + result.classes.join("\n"));
+    if (result?.html) console.log("[Debug] HTML preview:\n" + result.html);
+    alert(`DOM dump logged to console.\nClasses: ${result?.classes?.length || 0}\nHTML length: ${result?.html?.length || 0}`);
+  } catch (e) {
+    alert("Error: " + e.message);
+  }
+});
