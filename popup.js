@@ -45,13 +45,23 @@ async function saveSettings(s) {
 
 // === Download ===
 document.getElementById("btn-download").addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const url = tab?.url || "";
+  const match = url.match(/\/notes\/(\d+)/);
+  const fileId = match ? match[1] : null;
+
+  if (!fileId) {
+    showState("state-unsupported");
+    return;
+  }
+
   const noteTitle = document.getElementById("note-title").textContent;
   showState("state-downloading");
   document.getElementById("dl-note-title").textContent = noteTitle;
 
   try {
     const settings = await loadSettings();
-    const result = await chrome.runtime.sendMessage({ action: "download", settings });
+    const result = await chrome.runtime.sendMessage({ action: "download", settings, fileId });
 
     if (result?.success) {
       showState("state-success");
@@ -176,3 +186,22 @@ function updateFilenamePreview(pattern, format) {
 
 // History link
 document.getElementById("history-link")?.addEventListener("click", () => chrome.downloads.showDefaultFolder());
+
+// Debug dump
+document.getElementById("btn-dump")?.addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const frames = await chrome.webNavigation.getAllFrames({ tabId: tab.id });
+  for (const frame of frames) {
+    try {
+      const r = await chrome.tabs.sendMessage(tab.id, { action: "dumpDOM" }, { frameId: frame.frameId });
+      if (r?.classes?.length) {
+        console.log("[BoxNote DOM] Frame:", frame.url);
+        console.log("[BoxNote DOM] Classes:", r.classes);
+        console.log("[BoxNote DOM] HTML:", r.html);
+        alert(`Found ${r.classes.length} classes. Check popup console (F12).`);
+        return;
+      }
+    } catch {}
+  }
+  alert("No editor found");
+});
