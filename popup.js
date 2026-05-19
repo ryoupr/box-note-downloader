@@ -185,19 +185,26 @@ document.getElementById("btn-debug-dom")?.addEventListener("click", async () => 
   const frames = await chrome.webNavigation.getAllFrames({ tabId: tab.id });
   const notesFrame = frames.find(f => f.url.includes("notes.services.box.com"));
 
-  if (!notesFrame) {
-    alert("Notes iframe not found.");
-    return;
+  // Dump both main frame and notes iframe
+  const results = [];
+  for (const frame of [{ frameId: 0, url: "main" }, ...(notesFrame ? [notesFrame] : [])]) {
+    try {
+      const result = await chrome.tabs.sendMessage(tab.id, { action: "dumpDOM" }, { frameId: frame.frameId });
+      if (result?.fullHtml) {
+        results.push({ frameId: frame.frameId, url: frame.url, html: result.fullHtml });
+      }
+    } catch {}
   }
 
-  try {
-    const result = await chrome.tabs.sendMessage(tab.id, { action: "dumpDOM" }, { frameId: notesFrame.frameId });
-    const html = result?.fullHtml || result?.html || "No content";
-    const blob = new Blob([html], { type: "text/html" });
+  if (!results.length) { alert("No DOM found"); return; }
+
+  // Download each as separate file
+  for (const r of results) {
+    const label = r.url.includes("notes.services") ? "iframe" : "main";
+    const blob = new Blob([r.html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
-    await chrome.downloads.download({ url, filename: "boxnote-dom-debug.html", saveAs: true });
+    await chrome.downloads.download({ url, filename: `boxnote-dom-${label}.html`, saveAs: false });
     URL.revokeObjectURL(url);
-  } catch (e) {
-    alert("Error: " + e.message);
   }
+  alert(`Downloaded ${results.length} DOM file(s)`);
 });
