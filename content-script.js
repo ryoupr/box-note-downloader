@@ -84,15 +84,31 @@
       if (tag === "s" || tag === "del") return `~~${children()}~~`;
       if (tag === "a") return `[${children()}](${el.getAttribute("href") || ""})`;
 
-      // Embedded file preview (box-preview-node) — treat as image
+      // Box Notes native image (image-node-view)
+      if (el.classList.contains("image-node-view") || el.getAttribute("data-component-type") === "image") {
+        const imgEl = el.querySelector('img[data-testid="img-element"]') || el.querySelector("img:not(.avatar-image)");
+        if (imgEl) {
+          const src = imgEl.getAttribute("src") || "";
+          if (src) {
+            imgCounter++;
+            const name = imgEl.getAttribute("data-file-name") || `image_${imgCounter}.png`;
+            const safeName = name.replace(/[<>:"/\\|?*]/g, "_");
+            images.push({ url: src, filename: safeName });
+            return `![${name}](assets/${safeName})`;
+          }
+        }
+        return "";
+      }
+
+      // Embedded file preview (box-preview-node)
       if (el.classList.contains("box-preview-node")) {
-        const previewImg = el.querySelector("img.box-preview-wrapper-representation-image");
+        const previewImg = el.querySelector("img") ;
         if (previewImg) {
           const src = previewImg.getAttribute("src") || "";
           if (src) {
             imgCounter++;
             const ext = (src.match(/\.(png|jpg|jpeg|gif|webp|svg)/i) || [])[1] || "png";
-            const filename = `image_${imgCounter}.${ext.toLowerCase()}`;
+            const filename = `image_${imgCounter}.${ext}`;
             images.push({ url: src, filename });
             return `![](assets/${filename})`;
           }
@@ -101,13 +117,13 @@
       }
 
       if (tag === "img") {
-        // Skip ProseMirror internal images
         if (el.classList.contains("ProseMirror-separator") || el.classList.contains("avatar-image")) return "";
+        if (el.closest(".image-node-view") || el.closest('[data-component-type="image"]')) return "";
         const src = el.getAttribute("src") || "";
         if (src) {
           imgCounter++;
           const ext = (src.match(/\.(png|jpg|jpeg|gif|webp|svg)/i) || [])[1] || "png";
-          const filename = `image_${imgCounter}.${ext.toLowerCase()}`;
+          const filename = `image_${imgCounter}.${ext}`;
           images.push({ url: src, filename });
           return `![](assets/${filename})`;
         }
