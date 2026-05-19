@@ -26,16 +26,26 @@ async function handleDownload(settings) {
       console.log("[BoxNote] Title fetch failed:", e.message);
     }
 
-    // Get content from iframe
+    // Get content - try main frame first, then iframes
     let result = null;
     const frames = await chrome.webNavigation.getAllFrames({ tabId: tab.id }).catch(() => []);
-    for (const frame of frames || []) {
+    // Sort: main frame (0) last so iframe takes priority if both have content
+    const sortedFrames = [...(frames || [])].sort((a, b) => {
+      // Prefer notes.services.box.com frames
+      const aIsNotes = a.url?.includes("notes.services") ? 0 : 1;
+      const bIsNotes = b.url?.includes("notes.services") ? 0 : 1;
+      return aIsNotes - bIsNotes;
+    });
+    for (const frame of sortedFrames) {
       try {
         const r = await chrome.tabs.sendMessage(tab.id, { action: "convert" }, { frameId: frame.frameId });
         if (r?.markdown && !r.markdown.includes("Could not find")) {
-          result = r;
-          console.log("[BoxNote] Content from frame", frame.frameId, "md:", r.markdown.length, "images:", r.images.length);
-          break;
+          console.log("[BoxNote] Content from frame", frame.frameId, "("+frame.url?.slice(0,40)+")", "md:", r.markdown.length, "images:", r.images.length);
+          // Prefer result with images
+          if (!result || r.images.length > result.images.length) {
+            result = r;
+          }
+          if (r.images.length > 0) break; // Found images, use this
         }
       } catch {}
     }
