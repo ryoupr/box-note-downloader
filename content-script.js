@@ -19,6 +19,10 @@
       sendResponse({ fullHtml: html });
       return;
     }
+    if (msg.action === "fetchImage") {
+      fetchImageAsBase64(msg.url).then(sendResponse);
+      return true;
+    }
     if (msg.action === "getTitle") {
       const titleEl =
         document.querySelector('[data-testid="notes-title"]') ||
@@ -57,28 +61,11 @@
     console.log("[BoxNote CS] image-node-views in DOM:", editor.querySelectorAll('.image-node-view, [data-component-type="image"]').length);
     console.log("[BoxNote CS] img[data-testid=img-element]:", editor.querySelectorAll('img[data-testid="img-element"]').length);
 
-    // Fetch images as base64 from content script (same-origin)
-    const resolvedImages = [];
-    for (const img of images) {
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000);
-        const resp = await fetch(img.url, { credentials: "include", signal: controller.signal });
-        clearTimeout(timeout);
-        if (resp.ok) {
-          const blob = await resp.blob();
-          const base64 = await blobToBase64(blob);
-          resolvedImages.push({ filename: img.filename, data: base64 });
-        } else {
-          // Return URL so background can try
-          resolvedImages.push({ filename: img.filename, url: img.url, error: `HTTP ${resp.status}` });
-        }
-      } catch (e) {
-        resolvedImages.push({ filename: img.filename, url: img.url, error: e.message });
-      }
-    }
+    // Don't fetch images here (CORS: notes.services → app.box.com blocked)
+    // Return URLs for background/main-frame to fetch
+    const imageRefs = images.map(img => ({ filename: img.filename, url: img.url }));
 
-    return { markdown: markdown.trim(), images: resolvedImages, title, debug: { directImgCount: directImgs.length, convertedImgCount: images.length } };
+    return { markdown: markdown.trim(), images: imageRefs, title, debug: { directImgCount: directImgs.length, convertedImgCount: images.length } };
 
     function convertNode(node) {
       if (node.nodeType === Node.TEXT_NODE) return node.textContent || "";
@@ -181,5 +168,17 @@
       reader.onloadend = () => resolve(reader.result.split(",")[1]);
       reader.readAsDataURL(blob);
     });
+  }
+
+  async function fetchImageAsBase64(url) {
+    try {
+      const resp = await fetch(url, { credentials: "include" });
+      if (!resp.ok) return { data: null, error: `HTTP ${resp.status}` };
+      const blob = await resp.blob();
+      const data = await blobToBase64(blob);
+      return { data };
+    } catch (e) {
+      return { data: null, error: e.message };
+    }
   }
 })();

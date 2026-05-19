@@ -70,8 +70,19 @@ async function handleDownload(settings) {
     for (const img of images) {
       if (img.data) {
         successImages.push(img);
-      } else {
-        console.log("[BoxNote] Image fetch failed:", img.filename, img.error, img.url?.slice(0, 80));
+      } else if (img.url) {
+        // Fetch via main frame (same-origin as app.box.com)
+        try {
+          const fetched = await chrome.tabs.sendMessage(tab.id, { action: "fetchImage", url: img.url }, { frameId: 0 });
+          if (fetched?.data) {
+            successImages.push({ filename: img.filename, data: fetched.data });
+            console.log("[BoxNote] Image OK via main frame:", img.filename);
+          } else {
+            console.log("[BoxNote] Image failed via main frame:", img.filename, fetched?.error);
+          }
+        } catch (e) {
+          console.log("[BoxNote] Image fetch error:", img.filename, e.message);
+        }
       }
     }
     console.log("[BoxNote] Images: total:", images.length, "success:", successImages.length);
