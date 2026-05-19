@@ -31,12 +31,16 @@ async function handleDownload(settings, fileId) {
     }
 
     // Fetch boxnote from notes.services.box.com (no CORS in background)
-    // Try multiple endpoint patterns
-    const { authCode, sharedLink, fileId: noteFileId } = sessionInfo;
+    const { authCode, sharedLink } = sessionInfo;
+
+    // Try various API endpoints to get the note document JSON
     const endpoints = [
-      `https://notes.services.box.com/1.0/notes/${fileId}?authCode=${authCode}`,
-      `https://notes.services.box.com/p/note?fileId=${fileId}&authCode=${authCode}`,
-      `https://notes.services.box.com/api/notes/${fileId}?authCode=${authCode}`,
+      `https://notes.services.box.com/1.0/doc/${fileId}?authCode=${authCode}`,
+      `https://notes.services.box.com/1.0/document/${fileId}?authCode=${authCode}`,
+      `https://notes.services.box.com/doc/${fileId}?authCode=${authCode}`,
+      `https://notes.services.box.com/2.0/doc/${fileId}?authCode=${authCode}`,
+      `https://notes.services.box.com/api/v1/doc/${fileId}?authCode=${authCode}`,
+      `https://notes.services.box.com/api/v1/document/${fileId}?authCode=${authCode}`,
     ];
 
     let boxnote = null;
@@ -44,28 +48,65 @@ async function handleDownload(settings, fileId) {
       console.log("[BoxNote] Trying:", url);
       try {
         const resp = await fetch(url);
-        console.log("[BoxNote] Response:", resp.status, resp.headers.get("content-type"));
-        if (resp.ok) {
+        const ct = resp.headers.get("content-type") || "";
+        console.log("[BoxNote] Response:", resp.status, ct);
+        if (resp.ok && ct.includes("json")) {
+          const json = await resp.json();
+          console.log("[BoxNote] Got JSON, keys:", Object.keys(json));
+          boxnote = json;
+          break;
+        } else if (resp.ok) {
           const text = await resp.text();
-          console.log("[BoxNote] Body length:", text.length, "preview:", text.slice(0, 200));
-          try {
-            boxnote = JSON.parse(text);
-            console.log("[BoxNote] Got JSON, keys:", Object.keys(boxnote));
-            break;
-          } catch {
-            console.log("[BoxNote] Not JSON");
-          }
+          console.log("[BoxNote] Body preview:", text.slice(0, 150));
+          try { boxnote = JSON.parse(text); break; } catch {}
         }
       } catch (e) {
         console.log("[BoxNote] Fetch error:", e.message);
       }
     }
 
+    // If above failed, try fetching the HTML page and extracting embedded data
     if (!boxnote) {
-      return { success: false, error: "All API endpoints failed" };
+      console.log("[BoxNote] Trying to extract from HTML page...");
+      const htmlUrl = `https://notes.services.box.com/p/note?fileId=${fileId}&authCode=${authCode}`;
+      const resp = await fetch(htmlUrl);
+      const html = await resp.text();
+
+      // Look for embedded document data in the HTML
+      const jsonMatch = html.match(/window\.__INITIAL_STATE__\s*=\s*(\{[\s\S]*?\});?\s*<\/script>/);
+      const jsonMatch2 = html.match(/window\.initialData\s*=\s*(\{[\s\S]*?\});?\s*<\/script>/);
+      const jsonMatch3 = html.match(/"doc"\s*:\s*(\{[\s\S]*?\})\s*[,}]/);
+
+      for (const m of [jsonMatch, jsonMatch2, jsonMatch3]) {
+        if (m) {
+          try {
+            const data = JSON.parse(m[1]);
+            console.log("[BoxNote] Extracted from HTML, keys:", Object.keys(data));
+            boxnote = data;
+            break;
+          } catch (e) {
+            console.log("[BoxNote] Parse failed:", e.message);
+          }
+        }
+      }
+
+      // Also log all script content hints for debugging
+      if (!boxnote) {
+        const scriptMatches = html.match(/<script[^>]*>([\s\S]*?)<\/script>/g) || [];
+        console.log("[BoxNote] Script tags found:", scriptMatches.length);
+        for (const s of scriptMatches) {
+          if (s.length > 100 && s.length < 5000) {
+            console.log("[BoxNote] Script content:", s.slice(0, 300));
+          }
+        }
+      }
     }
 
-    console.log("[BoxNote] Got boxnote JSON, keys:", Object.keys(boxnote));
+    if (!boxnote) {
+      return { success: false, error: "Could not retrieve note content from any endpoint" };
+    }
+
+    console.log("[BoxNote] Got boxnote data, keys:", Object.keys(boxnote));
 
     // 3. Convert ProseMirror JSON → Markdown
     const { markdown, images } = convertBoxnoteToMarkdown(boxnote);
