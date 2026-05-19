@@ -89,7 +89,7 @@
           if (src) {
             imgCounter++;
             const name = imgEl.getAttribute("data-file-name") || `image_${imgCounter}.png`;
-            const safeName = name.replace(/[<>:"/\\|?*]/g, "_");
+            const safeName = name.replace(/[<>:"/\\|?*]/g, "_").replace(/\s+/g, "_");
             images.push({ url: src, filename: safeName });
             return `![${name}](assets/${safeName})`;
           }
