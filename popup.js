@@ -5,7 +5,7 @@ function showState(id) {
 }
 
 // === Settings (persisted in chrome.storage.local) ===
-const DEFAULTS = { format: "md", filename: "{title}_{yyyy-mm-dd}", includeAssets: true, autoOpen: false, notification: true };
+const DEFAULTS = { format: "md", filename: "{title}_{yyyy-mm-dd}", includeAssets: true, autoOpen: false, notification: true, logLevel: "info" };
 
 async function loadSettings() {
   const { settings } = await chrome.storage.local.get("settings");
@@ -125,6 +125,7 @@ function applySettingsToUI(s) {
   document.getElementById("setting-include-assets").checked = s.includeAssets;
   document.getElementById("setting-auto-open").checked = s.autoOpen;
   document.getElementById("setting-notification").checked = s.notification;
+  document.getElementById("setting-log-level").value = s.logLevel || "info";
   updateFilenamePreview(s.filename, s.format);
 }
 
@@ -164,6 +165,13 @@ document.getElementById("setting-filename").addEventListener("input", async (e) 
     s[key] = e.target.checked;
     await saveSettings(s);
   });
+});
+
+// Log level
+document.getElementById("setting-log-level").addEventListener("change", async (e) => {
+  const s = await loadSettings();
+  s.logLevel = e.target.value;
+  await saveSettings(s);
 });
 
 function updateFilenamePreview(pattern, format) {

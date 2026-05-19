@@ -189,6 +189,15 @@
         <div class="setting-row-text"><div class="setting-row-title">完了通知</div><div class="setting-row-desc">Chrome通知を表示</div></div>
         <label class="toggle"><input type="checkbox" id="setting-notification" checked><span class="toggle-slider"></span></label>
       </div>
+      <div class="setting-row">
+        <div class="setting-row-text"><div class="setting-row-title">ログレベル</div><div class="setting-row-desc">デバッグ時はverboseに</div></div>
+        <select id="setting-log-level" style="padding:4px 8px;border:1px solid #e0e0e0;border-radius:6px;font-size:11px;">
+          <option value="off">OFF</option>
+          <option value="error">Error</option>
+          <option value="info" selected>Info</option>
+          <option value="verbose">Verbose</option>
+        </select>
+      </div>
     </div>
 
     <div class="footer"><a href="#">ヘルプ</a><span>v1.0.0</span></div>
