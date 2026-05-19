@@ -5,6 +5,7 @@
     ".collab-cursor-container",
     ".heading-collapse-container",
     ".heading-anchor-container",
+    ".check-list-item-checkbox-container",
     "img.ProseMirror-separator",
     "br.ProseMirror-trailingBreak",
   ];
@@ -134,7 +135,17 @@
         return "";
       }
 
-      if (tag === "ul") return Array.from(el.children).map((li) => `- ${convertNode(li).trim()}`).join("\n") + "\n\n";
+      if (tag === "ul") {
+        if (el.classList.contains("check-list")) {
+          return Array.from(el.children).map((li) => {
+            const checked = li.classList.contains("is-checked") ? "x" : " ";
+            // Skip checkbox container, only get text content
+            const text = Array.from(li.childNodes).filter(n => !n.matches?.(".check-list-item-checkbox-container")).map(convertNode).join("").trim();
+            return `- [${checked}] ${text}`;
+          }).join("\n") + "\n\n";
+        }
+        return Array.from(el.children).map((li) => `- ${convertNode(li).trim()}`).join("\n") + "\n\n";
+      }
       if (tag === "ol") return Array.from(el.children).map((li, i) => `${i + 1}. ${convertNode(li).trim()}`).join("\n") + "\n\n";
       if (tag === "li") return children();
       if (tag === "blockquote") return children().trim().split("\n").map((l) => `> ${l}`).join("\n") + "\n\n";

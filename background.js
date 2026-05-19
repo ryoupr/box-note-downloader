@@ -1,6 +1,21 @@
 // Box Note to Markdown - Background Service Worker
 importScripts("lib/jszip.min.js");
 
+// Log level utility
+const LOG_LEVELS = { off: 0, error: 1, info: 2, verbose: 3 };
+let currentLogLevel = 2; // default: info
+
+async function initLogLevel() {
+  const { settings } = await chrome.storage.local.get("settings");
+  currentLogLevel = LOG_LEVELS[settings?.logLevel] ?? 2;
+}
+
+const log = {
+  error: (...args) => currentLogLevel >= 1 && console.error("[BoxNote]", ...args),
+  info: (...args) => currentLogLevel >= 2 && console.log("[BoxNote]", ...args),
+  verbose: (...args) => currentLogLevel >= 3 && console.log("[BoxNote]", ...args),
+};
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action === "download") {
     handleDownload(msg.settings || {}).then(sendResponse);
@@ -10,10 +25,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 async function handleDownload(settings) {
   const { format = "md", filename: filenamePattern = "{title}_{yyyy-mm-dd}", includeAssets = true } = settings;
+  currentLogLevel = LOG_LEVELS[settings.logLevel] ?? 2;
 
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    console.log("[BoxNote] Active tab:", tab?.id, tab?.url);
+    log.info("Active tab:", tab?.id, tab?.url);
     if (!tab?.id) return { success: false, error: "No active tab" };
 
     // Get title from main frame
@@ -21,9 +37,9 @@ async function handleDownload(settings) {
     try {
       const titleResult = await chrome.tabs.sendMessage(tab.id, { action: "getTitle" }, { frameId: 0 });
       if (titleResult?.title) noteTitle = titleResult.title;
-      console.log("[BoxNote] Title from main frame:", noteTitle);
+      log.info("Title from main frame:", noteTitle);
     } catch (e) {
-      console.log("[BoxNote] Title fetch failed:", e.message);
+      log.verbose("Title fetch failed:", e.message);
     }
 
     // Get content - try main frame first, then iframes
@@ -40,7 +56,7 @@ async function handleDownload(settings) {
       try {
         const r = await chrome.tabs.sendMessage(tab.id, { action: "convert" }, { frameId: frame.frameId });
         if (r?.markdown && !r.markdown.includes("Could not find")) {
-          console.log("[BoxNote] Content from frame", frame.frameId, "("+frame.url?.slice(0,40)+")", "md:", r.markdown.length, "images:", r.images.length, "debug:", JSON.stringify(r.debug));
+          log.info("Content from frame", frame.frameId, "("+frame.url?.slice(0,40)+")", "md:", r.markdown.length, "images:", r.images.length, "debug:", JSON.stringify(r.debug));
           // Prefer result with images
           if (!result || r.images.length > result.images.length) {
             result = r;
@@ -76,16 +92,16 @@ async function handleDownload(settings) {
           const fetched = await chrome.tabs.sendMessage(tab.id, { action: "fetchImage", url: img.url }, { frameId: 0 });
           if (fetched?.data) {
             successImages.push({ filename: img.filename, data: fetched.data });
-            console.log("[BoxNote] Image OK via main frame:", img.filename);
+            log.verbose("Image OK via main frame:", img.filename);
           } else {
-            console.log("[BoxNote] Image failed via main frame:", img.filename, fetched?.error);
+            log.verbose("Image failed via main frame:", img.filename, fetched?.error);
           }
         } catch (e) {
-          console.log("[BoxNote] Image fetch error:", img.filename, e.message);
+          log.verbose("Image fetch error:", img.filename, e.message);
         }
       }
     }
-    console.log("[BoxNote] Images: total:", images.length, "success:", successImages.length);
+    log.info("Images: total:", images.length, "success:", successImages.length);
 
     const hasImages = includeAssets && successImages.length > 0;
 
@@ -93,7 +109,7 @@ async function handleDownload(settings) {
       const dataUrl = "data:text/markdown;base64," + btoa(unescape(encodeURIComponent(markdown)));
       const filename = `${safeName}.${format}`;
       await chrome.downloads.download({ url: dataUrl, filename, saveAs: true });
-      console.log("[BoxNote] Download complete:", filename);
+      log.info("Download complete:", filename);
       return { success: true, filename };
     } else {
       const zip = new JSZip();
@@ -103,18 +119,18 @@ async function handleDownload(settings) {
 
       for (const img of successImages) {
         assets.file(img.filename, img.data, { base64: true });
-        console.log("[BoxNote] Added image:", img.filename);
+        log.verbose("Added image:", img.filename);
       }
 
       const base64 = await zip.generateAsync({ type: "base64" });
       const dataUrl = "data:application/zip;base64," + base64;
       const filename = `${safeName}.zip`;
       await chrome.downloads.download({ url: dataUrl, filename, saveAs: true });
-      console.log("[BoxNote] Download complete:", filename);
+      log.info("Download complete:", filename);
       return { success: true, filename };
     }
   } catch (e) {
-    console.error("[BoxNote] Error:", e);
+    log.error("Error:", e);
     return { success: false, error: e.message || "Unknown error" };
   }
 }
