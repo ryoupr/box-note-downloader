@@ -52,11 +52,7 @@
     .setting-section { margin-bottom: 16px; }
     .setting-label { font-size: 12px; font-weight: 600; color: #555; margin-bottom: 8px; }
 
-    .format-options { display: flex; gap: 8px; }
-    .format-option { flex: 1; padding: 8px 4px; border: 1.5px solid #e0e0e0; border-radius: 8px; text-align: center; cursor: pointer; font-size: 12px; font-weight: 500; background: white; transition: all 0.15s; }
-    .format-option.active { border-color: #3b5cff; color: #3b5cff; background: #f0f4ff; }
-    .format-option small { display: block; font-size: 10px; color: #999; font-weight: 400; margin-top: 2px; }
-    .format-option.active small { color: #3b5cff; }
+
 
     .setting-input { width: 100%; padding: 8px 10px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 12px; font-family: monospace; }
     .setting-hint { font-size: 10px; color: #999; margin-top: 4px; }
@@ -161,14 +157,7 @@
       <div><h2>設定</h2><small>SETTINGS</small></div>
     </div>
 
-    <div class="setting-section">
-      <div class="setting-label">出力フォーマット</div>
-      <div class="format-options">
-        <div class="format-option active" data-format="md"><strong>.md</strong><small>Markdown</small></div>
-        <div class="format-option" data-format="html"><strong>.html</strong><small>HTML</small></div>
-        <div class="format-option" data-format="txt"><strong>.txt</strong><small>プレーン</small></div>
-      </div>
-    </div>
+
 
     <div class="setting-section">
       <div class="setting-label">ファイル名パターン</div>
@@ -178,7 +167,7 @@
 
     <div class="setting-section">
       <div class="setting-row">
-        <div class="setting-row-text"><div class="setting-row-title">添付ファイルを含める</div><div class="setting-row-desc">画像 / PDFをZIPでまとめる</div></div>
+        <div class="setting-row-text"><div class="setting-row-title">添付ファイルを含める</div><div class="setting-row-desc">画像をZIPでまとめる</div></div>
         <label class="toggle"><input type="checkbox" id="setting-include-assets" checked><span class="toggle-slider"></span></label>
       </div>
       <div class="setting-row">

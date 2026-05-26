@@ -118,9 +118,6 @@ document.getElementById("btn-back").addEventListener("click", () => showState("s
 
 // === Settings UI ===
 function applySettingsToUI(s) {
-  document.querySelectorAll(".format-option").forEach((el) => {
-    el.classList.toggle("active", el.dataset.format === s.format);
-  });
   document.getElementById("setting-filename").value = s.filename;
   document.getElementById("setting-include-assets").checked = s.includeAssets;
   document.getElementById("setting-auto-open").checked = s.autoOpen;
@@ -129,23 +126,10 @@ function applySettingsToUI(s) {
   updateFilenamePreview(s.filename, s.format);
 }
 
-// Format selection
-document.querySelectorAll(".format-option").forEach((el) => {
-  el.addEventListener("click", async () => {
-    document.querySelectorAll(".format-option").forEach((o) => o.classList.remove("active"));
-    el.classList.add("active");
-    const s = await loadSettings();
-    s.format = el.dataset.format;
-    await saveSettings(s);
-    updateFilenamePreview(s.filename, s.format);
-    updateHeaderFormat(s.format);
-  });
-});
-
-function updateHeaderFormat(format) {
-  const labels = { md: "MARKDOWN", html: "HTML", txt: "PLAIN TEXT" };
+// Format is always md
+function updateHeaderFormat() {
   document.querySelectorAll(".header-subtitle span").forEach((el) => {
-    el.textContent = labels[format] || "MARKDOWN";
+    el.textContent = "MARKDOWN";
   });
 }
 
