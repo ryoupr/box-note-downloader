@@ -5,7 +5,7 @@ function showState(id) {
 }
 
 // === Settings (persisted in chrome.storage.local) ===
-const DEFAULTS = { format: "md", filename: "{title}_{yyyy-mm-dd}", includeAssets: true, autoOpen: false, notification: true, logLevel: "info" };
+const DEFAULTS = { format: "md", filename: "{title}_{yyyy-mm-dd}", includeAssets: true, autoOpen: false, notification: true, logLevel: "info", developerMode: false };
 
 async function loadSettings() {
   const { settings } = await chrome.storage.local.get("settings");
@@ -122,8 +122,17 @@ function applySettingsToUI(s) {
   document.getElementById("setting-include-assets").checked = s.includeAssets;
   document.getElementById("setting-auto-open").checked = s.autoOpen;
   document.getElementById("setting-notification").checked = s.notification;
+  document.getElementById("setting-developer-mode").checked = !!s.developerMode;
   document.getElementById("setting-log-level").value = s.logLevel || "info";
+  updateDevOnlyVisibility(s.developerMode);
   updateFilenamePreview(s.filename, s.format);
+}
+
+// Developer mode: show/hide debug-only settings
+function updateDevOnlyVisibility(enabled) {
+  document.querySelectorAll(".dev-only").forEach((el) => {
+    el.classList.toggle("hidden", !enabled);
+  });
 }
 
 // Format is always md
@@ -149,6 +158,14 @@ document.getElementById("setting-filename").addEventListener("input", async (e) 
     s[key] = e.target.checked;
     await saveSettings(s);
   });
+});
+
+// Developer mode toggle
+document.getElementById("setting-developer-mode").addEventListener("change", async (e) => {
+  const s = await loadSettings();
+  s.developerMode = e.target.checked;
+  await saveSettings(s);
+  updateDevOnlyVisibility(s.developerMode);
 });
 
 // Log level
