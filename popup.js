@@ -4,8 +4,24 @@ function showState(id) {
   document.getElementById(id).classList.add("active");
 }
 
+// === i18n (loaded via lib/i18n.js) ===
+let I18N = { locale: "en", t: (k) => k, messages: {} };
+
+async function initLocale() {
+  try {
+    I18N = await globalThis.BoxNoteI18n.initI18n();
+  } catch {
+    I18N = { locale: "en", t: (k) => k, messages: {} };
+  }
+  return I18N;
+}
+
+function t(key, subs) {
+  return I18N.t(key, subs);
+}
+
 // === Settings (persisted in chrome.storage.local) ===
-const DEFAULTS = { format: "md", filename: "{title}_{yyyy-mm-dd}", includeAssets: true, autoOpen: false, notification: true, logLevel: "info" };
+const DEFAULTS = { format: "md", filename: "{title}_{yyyy-mm-dd}", includeAssets: true, autoOpen: false, notification: true, logLevel: "info", uiLanguage: "auto" };
 
 async function loadSettings() {
   const { settings } = await chrome.storage.local.get("settings");
@@ -18,11 +34,21 @@ async function saveSettings(s) {
 
 // === Init ===
 (async () => {
+  await initLocale();
+
+  // Initial dynamic text (kept out of data-i18n so language switching
+  // never overwrites the fetched note title)
+  document.getElementById("note-title").textContent = t("loadingTitle");
+  document.getElementById("note-meta-text").textContent = t("metaChecking");
+
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const url = tab?.url || "";
 
   if (!url.match(/\.app\.box\.com\/notes\//)) {
     showState("state-unsupported");
+    // Load settings into UI even on unsupported state (for language select)
+    const s0 = await loadSettings();
+    applySettingsToUI(s0);
     return;
   }
 
@@ -30,7 +56,7 @@ async function saveSettings(s) {
     const result = await chrome.tabs.sendMessage(tab.id, { action: "getTitle" }, { frameId: 0 });
     if (result?.title) {
       document.getElementById("note-title").textContent = result.title;
-      document.getElementById("note-meta-text").textContent = "更新 数分前";
+      document.getElementById("note-meta-text").textContent = "";
     }
   } catch {
     document.getElementById("note-title").textContent = tab.title?.replace(/ - Box$/, "") || "Box Note";
@@ -40,7 +66,6 @@ async function saveSettings(s) {
   // Load settings into UI
   const s = await loadSettings();
   applySettingsToUI(s);
-  updateHeaderFormat(s.format);
 })();
 
 // === Download ===
@@ -60,10 +85,10 @@ document.getElementById("btn-download").addEventListener("click", async () => {
 
       if (settings.autoOpen) chrome.downloads.showDefaultFolder();
     } else {
-      showError(noteTitle, result?.error || "不明なエラー");
+      showError(noteTitle, result?.error || t("errUnknown"));
     }
   } catch (e) {
-    showError(noteTitle, e.message || "エラー");
+    showError(noteTitle, e.message || t("errUnknown"));
   }
 });
 
@@ -71,27 +96,27 @@ function showError(noteTitle, errorMsg) {
   showState("state-error");
   document.getElementById("error-note-title").textContent = noteTitle;
 
-  // Categorize error
+  // Categorize error (keys map to _locales/*/messages.json)
   const errors = {
-    auth: { icon: "⚠️", title: "認証が切れています", desc: "Boxへのログインセッションが期限切れです。再度ログインしてからお試しください。", action: "Boxにログイン", handler: () => window.open("https://app.box.com", "_blank") },
-    rate: { icon: "⚠️", title: "リクエスト制限中", desc: "Box APIの利用制限に達しました。約1分後に再度お試しください。", action: "もう一度試す", handler: retry },
-    network: { icon: "📡", title: "通信エラー", desc: "インターネットに接続できません。ネットワーク状況を確認してください。", action: "再試行", handler: retry },
-    size: { icon: "📦", title: "ノートが大きすぎます", desc: "添付ファイルを含めると100MBを超えます。設定で添付を除外するか、添付を個別にDLしてください。", action: "添付を除外してDL", handler: retryNoAssets },
-    permission: { icon: "🔒", title: "アクセス権がありません", desc: "このノートを閲覧する権限がありません。所有者に共有権限の付与を依頼してください。", action: "再試行", handler: retry },
-    convert: { icon: "⚠️", title: "一部変換できないブロック", desc: "カスタムブロックがMarkdownに変換できませんでした。プレースホルダーとして保存されます。", action: "プレースホルダーでDL", handler: retry },
+    auth: { icon: "⚠️", titleKey: "errAuthTitle", descKey: "errAuthDesc", actionKey: "errAuthAction", handler: () => window.open("https://app.box.com", "_blank") },
+    rate: { icon: "⚠️", titleKey: "errRateTitle", descKey: "errRateDesc", actionKey: "errRateAction", handler: retry },
+    network: { icon: "📡", titleKey: "errNetworkTitle", descKey: "errNetworkDesc", actionKey: "errNetworkAction", handler: retry },
+    size: { icon: "📦", titleKey: "errSizeTitle", descKey: "errSizeDesc", actionKey: "errSizeAction", handler: retryNoAssets },
+    permission: { icon: "🔒", titleKey: "errPermissionTitle", descKey: "errPermissionDesc", actionKey: "errPermissionAction", handler: retry },
+    convert: { icon: "⚠️", titleKey: "errConvertTitle", descKey: "errConvertDesc", actionKey: "errConvertAction", handler: retry },
   };
 
-  const key = Object.keys(errors).find((k) => errorMsg.toLowerCase().includes(k)) || "network";
+  const key = Object.keys(errors).find((k) => String(errorMsg).toLowerCase().includes(k)) || "network";
   const err = errors[key] || errors.network;
 
   // Fallback for unknown errors
-  const display = errorMsg.includes("Could not find") ? errors.convert : err;
+  const display = String(errorMsg).includes("Could not find") ? errors.convert : err;
   document.getElementById("error-icon-display").textContent = display.icon;
-  document.getElementById("error-title").textContent = display.title;
-  document.getElementById("error-desc").textContent = display.desc;
+  document.getElementById("error-title").textContent = t(display.titleKey);
+  document.getElementById("error-desc").textContent = t(display.descKey);
 
   const btn = document.getElementById("error-action-btn");
-  btn.textContent = display.action;
+  btn.textContent = t(display.actionKey);
   btn.onclick = display.handler;
 }
 
@@ -123,14 +148,8 @@ function applySettingsToUI(s) {
   document.getElementById("setting-auto-open").checked = s.autoOpen;
   document.getElementById("setting-notification").checked = s.notification;
   document.getElementById("setting-log-level").value = s.logLevel || "info";
+  document.getElementById("setting-language").value = s.uiLanguage || "auto";
   updateFilenamePreview(s.filename, s.format);
-}
-
-// Format is always md
-function updateHeaderFormat() {
-  document.querySelectorAll(".header-subtitle span").forEach((el) => {
-    el.textContent = "MARKDOWN";
-  });
 }
 
 // Filename pattern
@@ -158,12 +177,22 @@ document.getElementById("setting-log-level").addEventListener("change", async (e
   await saveSettings(s);
 });
 
+// Language: save + re-apply immediately
+document.getElementById("setting-language").addEventListener("change", async (e) => {
+  const s = await loadSettings();
+  s.uiLanguage = e.target.value;
+  await saveSettings(s);
+  await initLocale();
+  updateFilenamePreview(s.filename, s.format);
+});
+
 function updateFilenamePreview(pattern, format) {
   const now = new Date();
   const example = pattern
-    .replace("{title}", "月次レビュー")
+    .replace("{title}", "Monthly review")
     .replace("{yyyy-mm-dd}", `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`);
-  document.getElementById("filename-preview").textContent = `例: ${example}.${format}`;
+  const prefix = t("filenamePreviewPrefix").replace("$TITLE$", `${example}.${format}`);
+  document.getElementById("filename-preview").textContent = prefix;
 }
 
 // History link

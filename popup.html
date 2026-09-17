@@ -80,69 +80,69 @@
     <div class="header">
       <div class="header-left">
         <img class="header-icon" src="icons/icon48.png" alt="">
-        <div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div>
+        <div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div>
       </div>
       <button class="settings-btn" id="btn-settings">⚙</button>
     </div>
     <div class="note-card">
       <svg class="note-icon-svg" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#0061d5" stroke-width="1.5"/><path d="M8 7h8M8 11h8M8 15h5" stroke="#0061d5" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <div class="note-info"><div class="note-title" id="note-title">読み込み中...</div><div class="note-meta"><span id="note-type">BoxNote</span> ・ <span id="note-meta-text">確認中</span></div></div>
+      <div class="note-info"><div class="note-title" id="note-title">読み込み中...</div><div class="note-meta"><span id="note-type" data-i18n="noteType">BoxNote</span> ・ <span id="note-meta-text">確認中</span></div></div>
     </div>
-    <button class="download-btn" id="btn-download">⬇ Markdownでダウンロード</button>
-    <div class="footer"><a id="history-link">最近のDL履歴</a><span>v0.1.2</span></div>
+    <button class="download-btn" id="btn-download" data-i18n="downloadBtn">⬇ Markdownでダウンロード</button>
+    <div class="footer"><a id="history-link" data-i18n="historyLink">最近のDL履歴</a><span>v1.0.3</span></div>
   </div>
 
   <!-- ===== DOWNLOADING ===== -->
   <div id="state-downloading" class="state">
     <div class="header">
-      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div></div>
+      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
       <button class="settings-btn" disabled>⚙</button>
     </div>
     <div class="note-card">
       <svg class="note-icon-svg" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#0061d5" stroke-width="1.5"/><path d="M8 7h8M8 11h8M8 15h5" stroke="#0061d5" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <div class="note-info"><div class="note-title" id="dl-note-title">-</div><div class="note-meta">BoxNote</div></div>
+      <div class="note-info"><div class="note-title" id="dl-note-title">-</div><div class="note-meta" data-i18n="noteType">BoxNote</div></div>
     </div>
-    <button class="download-btn" disabled>↻ ダウンロード中...</button>
+    <button class="download-btn" disabled data-i18n="downloading">↻ ダウンロード中...</button>
     <div class="progress-bar"><div class="progress-fill"></div></div>
-    <div class="dl-status" id="dl-status">添付ファイルを取得しています</div>
+    <div class="dl-status" id="dl-status" data-i18n="dlStatus">添付ファイルを取得しています</div>
   </div>
 
   <!-- ===== SUCCESS ===== -->
   <div id="state-success" class="state">
     <div class="header">
-      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div></div>
+      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
       <button class="settings-btn" id="btn-settings-success">⚙</button>
     </div>
     <div class="note-card">
       <svg class="note-icon-svg" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#0061d5" stroke-width="1.5"/><path d="M8 7h8M8 11h8M8 15h5" stroke="#0061d5" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <div class="note-info"><div class="note-title" id="success-note-title">-</div><div class="note-meta">BoxNote</div></div>
+      <div class="note-info"><div class="note-title" id="success-note-title">-</div><div class="note-meta" data-i18n="noteType">BoxNote</div></div>
     </div>
-    <div class="success-check">✓ 保存しました</div>
+    <div class="success-check" data-i18n="successCheck">✓ 保存しました</div>
     <div class="success-file" id="success-file">-</div>
-    <button class="action-btn" id="btn-open">📂 開く</button>
+    <button class="action-btn" id="btn-open" data-i18n="openBtn">📂 開く</button>
   </div>
 
   <!-- ===== UNSUPPORTED ===== -->
   <div id="state-unsupported" class="state">
     <div class="header">
-      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div></div>
+      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
       <button class="settings-btn" id="btn-settings-unsupported">⚙</button>
     </div>
     <div class="error-icon">⚠️</div>
-    <div class="error-title">BoxNoteを開いてください</div>
-    <div class="error-desc">このタブはBoxNoteではありません。</div>
-    <a class="action-btn" href="https://app.box.com" target="_blank">Boxを開く ↗</a>
+    <div class="error-title" data-i18n="unsupportedTitle">BoxNoteを開いてください</div>
+    <div class="error-desc" data-i18n="unsupportedDesc">このタブはBoxNoteではありません。</div>
+    <a class="action-btn" href="https://app.box.com" target="_blank" data-i18n="openBoxBtn">Boxを開く ↗</a>
   </div>
 
   <!-- ===== ERROR ===== -->
   <div id="state-error" class="state">
     <div class="header">
-      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title">BoxNote DL</div><div class="header-subtitle">→ <span>MARKDOWN</span></div></div></div>
+      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
       <button class="settings-btn" id="btn-settings-error">⚙</button>
     </div>
     <div class="note-card">
       <svg class="note-icon-svg" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="#0061d5" stroke-width="1.5"/><path d="M8 7h8M8 11h8M8 15h5" stroke="#0061d5" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <div class="note-info"><div class="note-title" id="error-note-title">-</div><div class="note-meta">BoxNote</div></div>
+      <div class="note-info"><div class="note-title" id="error-note-title">-</div><div class="note-meta" data-i18n="noteType">BoxNote</div></div>
     </div>
     <div class="error-icon" id="error-icon-display">⚠️</div>
     <div class="error-title" id="error-title">エラー</div>
@@ -154,32 +154,48 @@
   <div id="state-settings" class="state">
     <div class="settings-header">
       <button class="settings-back" id="btn-back">←</button>
-      <div><h2>設定</h2><small>SETTINGS</small></div>
+      <div><h2 data-i18n="settingsTitle">設定</h2><small data-i18n="settingsSmall">SETTINGS</small></div>
     </div>
 
-
+    <div class="setting-section">
+      <div class="setting-row">
+        <div class="setting-row-text"><div class="setting-row-title" data-i18n="settingLanguageTitle">言語</div><div class="setting-row-desc" data-i18n="settingLanguageDesc">既定ではブラウザの言語に従います</div></div>
+        <select id="setting-language" style="padding:4px 8px;border:1px solid #e0e0e0;border-radius:6px;font-size:11px;max-width:150px;">
+          <option value="auto" data-i18n="languageAuto">自動（ブラウザの言語）</option>
+          <option value="en">English</option>
+          <option value="ja">日本語</option>
+          <option value="zh_CN">简体中文</option>
+          <option value="es">Español</option>
+          <option value="hi">हिन्दी</option>
+          <option value="ar">العربية</option>
+          <option value="pt_BR">Português (Brasil)</option>
+          <option value="ru">Русский</option>
+          <option value="bn">বাংলা</option>
+        </select>
+      </div>
+    </div>
 
     <div class="setting-section">
-      <div class="setting-label">ファイル名パターン</div>
+      <div class="setting-label" data-i18n="settingFilenameLabel">ファイル名パターン</div>
       <input class="setting-input" id="setting-filename" value="{title}_{yyyy-mm-dd}">
       <div class="setting-hint" id="filename-preview">例: 月次レビュー_2026-05-18.md</div>
     </div>
 
     <div class="setting-section">
       <div class="setting-row">
-        <div class="setting-row-text"><div class="setting-row-title">添付ファイルを含める</div><div class="setting-row-desc">画像をZIPでまとめる</div></div>
+        <div class="setting-row-text"><div class="setting-row-title" data-i18n="settingIncludeAssetsTitle">添付ファイルを含める</div><div class="setting-row-desc" data-i18n="settingIncludeAssetsDesc">画像をZIPでまとめる</div></div>
         <label class="toggle"><input type="checkbox" id="setting-include-assets" checked><span class="toggle-slider"></span></label>
       </div>
       <div class="setting-row">
-        <div class="setting-row-text"><div class="setting-row-title">DL後に自動で開</div><div class="setting-row-desc">既定のアプリで開く</div></div>
+        <div class="setting-row-text"><div class="setting-row-title" data-i18n="settingAutoOpenTitle">DL後に自動で開</div><div class="setting-row-desc" data-i18n="settingAutoOpenDesc">既定のアプリで開く</div></div>
         <label class="toggle"><input type="checkbox" id="setting-auto-open"><span class="toggle-slider"></span></label>
       </div>
       <div class="setting-row">
-        <div class="setting-row-text"><div class="setting-row-title">完了通知</div><div class="setting-row-desc">Chrome通知を表示</div></div>
+        <div class="setting-row-text"><div class="setting-row-title" data-i18n="settingNotificationTitle">完了通知</div><div class="setting-row-desc" data-i18n="settingNotificationDesc">Chrome通知を表示</div></div>
         <label class="toggle"><input type="checkbox" id="setting-notification" checked><span class="toggle-slider"></span></label>
       </div>
       <div class="setting-row">
-        <div class="setting-row-text"><div class="setting-row-title">ログレベル</div><div class="setting-row-desc">デバッグ時はverboseに</div></div>
+        <div class="setting-row-text"><div class="setting-row-title" data-i18n="settingLogLevelTitle">ログレベル</div><div class="setting-row-desc" data-i18n="settingLogLevelDesc">デバッグ時はverboseに</div></div>
         <select id="setting-log-level" style="padding:4px 8px;border:1px solid #e0e0e0;border-radius:6px;font-size:11px;">
           <option value="off">OFF</option>
           <option value="error">Error</option>
@@ -189,12 +205,13 @@
       </div>
     </div>
 
-    <div class="footer"><a href="#">ヘルプ</a><span>v0.1.2</span></div>
+    <div class="footer"><a href="#" data-i18n="helpLink">ヘルプ</a><span>v1.0.3</span></div>
     <div style="margin-top: 12px;">
       <button class="action-btn" id="btn-debug-dom">🔍 DOM Debug</button>
     </div>
   </div>
 
+  <script src="lib/i18n.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

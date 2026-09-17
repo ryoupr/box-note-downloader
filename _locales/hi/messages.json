@@ -1,0 +1,164 @@
+{
+  "appName": {
+    "message": "BoxNote DL"
+  },
+  "appDesc": {
+    "message": "Box Notes को Markdown में डाउनलोड करें, चित्र ZIP में बंडल।"
+  },
+  "subtitle": {
+    "message": "MARKDOWN"
+  },
+  "loadingTitle": {
+    "message": "लोड हो रहा है..."
+  },
+  "metaChecking": {
+    "message": "जाँच रहे हैं"
+  },
+  "noteType": {
+    "message": "BoxNote"
+  },
+  "downloadBtn": {
+    "message": "⬇ Markdown में डाउनलोड करें"
+  },
+  "downloading": {
+    "message": "↻ डाउनलोड हो रहा है..."
+  },
+  "dlStatus": {
+    "message": "अटैचमेंट प्राप्त किए जा रहे हैं"
+  },
+  "historyLink": {
+    "message": "हाल की डाउनलोड हिस्ट्री"
+  },
+  "successCheck": {
+    "message": "✓ सहेज लिया गया"
+  },
+  "openBtn": {
+    "message": "📂 खोलें"
+  },
+  "unsupportedTitle": {
+    "message": "Box Note खोलें"
+  },
+  "unsupportedDesc": {
+    "message": "यह टैब Box Note नहीं है।"
+  },
+  "openBoxBtn": {
+    "message": "Box खोलें ↗"
+  },
+  "errorTitle": {
+    "message": "त्रुटि"
+  },
+  "retryBtn": {
+    "message": "पुनः प्रयास"
+  },
+  "settingsTitle": {
+    "message": "सेटिंग्स"
+  },
+  "settingsSmall": {
+    "message": "SETTINGS"
+  },
+  "settingFilenameLabel": {
+    "message": "फ़ाइल नाम पैटर्न"
+  },
+  "filenamePreviewPrefix": {
+    "message": "उदाहरण: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1",
+        "example": "Monthly review_2026-05-18.md"
+      }
+    }
+  },
+  "settingIncludeAssetsTitle": {
+    "message": "अटैचमेंट शामिल करें"
+  },
+  "settingIncludeAssetsDesc": {
+    "message": "चित्रों को ZIP में बंडल करें"
+  },
+  "settingAutoOpenTitle": {
+    "message": "डाउनलोड के बाद खोलें"
+  },
+  "settingAutoOpenDesc": {
+    "message": "डाउनलोड फ़ोल्डर दिखाएँ"
+  },
+  "settingNotificationTitle": {
+    "message": "पूर्ण होने की सूचना"
+  },
+  "settingNotificationDesc": {
+    "message": "Chrome सूचना दिखाएँ"
+  },
+  "settingLogLevelTitle": {
+    "message": "लॉग स्तर"
+  },
+  "settingLogLevelDesc": {
+    "message": "डिबग करते समय verbose चुनें"
+  },
+  "settingLanguageTitle": {
+    "message": "भाषा"
+  },
+  "settingLanguageDesc": {
+    "message": "डिफ़ॉल्ट रूप से ब्राउज़र भाषा का पालन करता है"
+  },
+  "languageAuto": {
+    "message": "स्वतः (ब्राउज़र भाषा)"
+  },
+  "helpLink": {
+    "message": "सहायता"
+  },
+  "errAuthTitle": {
+    "message": "साइन आउट हो गया"
+  },
+  "errAuthDesc": {
+    "message": "आपका Box लॉगिन सत्र समाप्त हो गया है। कृपया Box में फिर से लॉग इन करें।"
+  },
+  "errAuthAction": {
+    "message": "Box में लॉग इन करें"
+  },
+  "errRateTitle": {
+    "message": "अनुरोध सीमा पूरी"
+  },
+  "errRateDesc": {
+    "message": "Box API की सीमा पूरी हो गई है। लगभग एक मिनट बाद फिर से प्रयास करें।"
+  },
+  "errRateAction": {
+    "message": "फिर से कोशिश करें"
+  },
+  "errNetworkTitle": {
+    "message": "नेटवर्क त्रुटि"
+  },
+  "errNetworkDesc": {
+    "message": "इंटरनेट से कनेक्ट नहीं हो सकता। कृपया नेटवर्क कनेक्शन जाँचें।"
+  },
+  "errNetworkAction": {
+    "message": "पुनः प्रयास"
+  },
+  "errSizeTitle": {
+    "message": "नोट बहुत बड़ा है"
+  },
+  "errSizeDesc": {
+    "message": "अटैचमेंट मिलाने पर 100MB से अधिक हो जाता है। सेटिंग्स में अटैचमेंट हटाएँ या उन्हें अलग से डाउनलोड करें।"
+  },
+  "errSizeAction": {
+    "message": "बिना अटैचमेंट डाउनलोड करें"
+  },
+  "errPermissionTitle": {
+    "message": "एक्सेस अनुमति नहीं है"
+  },
+  "errPermissionDesc": {
+    "message": "आपको इस नोट को देखने की अनुमति नहीं है। कृपया स्वामी से शेयरिंग अनुमति माँगें।"
+  },
+  "errPermissionAction": {
+    "message": "पुनः प्रयास"
+  },
+  "errConvertTitle": {
+    "message": "कुछ ब्लॉक परिवर्तित नहीं हो सके"
+  },
+  "errConvertDesc": {
+    "message": "कस्टम ब्लॉक को Markdown में बदला नहीं जा सका। वे प्लेसहोल्डर के रूप में सहेजे जाएँगे।"
+  },
+  "errConvertAction": {
+    "message": "प्लेसहोल्डर के साथ डाउनलोड करें"
+  },
+  "errUnknown": {
+    "message": "अज्ञात त्रुटि"
+  }
+}

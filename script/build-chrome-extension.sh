@@ -29,6 +29,10 @@ fi
 
 VERSION=$(grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*"' manifest.json | sed 's/.*"\([^"]*\)".*/\1/')
 NAME=$(grep -o '"name"[[:space:]]*:[[:space:]]*"[^"]*"' manifest.json | sed 's/.*"\([^"]*\)".*/\1/')
+# i18n化後は name が __MSG_appName__ になるため、実際の名前でフォールバック
+if [ "$NAME" = "__MSG_appName__" ]; then
+    NAME=$(python3 -c "import json;print(json.load(open('_locales/en/messages.json'))['appName']['message'])" 2>/dev/null || echo "BoxNote-DL")
+fi
 
 if [ -z "$VERSION" ] || [ -z "$NAME" ]; then
     print_error "manifest.jsonからバージョンまたは名前を取得できませんでした。"
@@ -109,6 +113,16 @@ if [ -d "lib" ]; then
     print_info "✓ lib/ ディレクトリをコピーしました"
 else
     print_warning "lib/ ディレクトリが見つかりません"
+fi
+
+# _locales/ (i18n) をコピー — manifest参照外のため明示的に必要
+if [ -d "_locales" ]; then
+    cp -r _locales "$TEMP_DIR/"
+    print_info "✓ _locales/ ディレクトリをコピーしました"
+    LOCALE_COUNT=$(find _locales -name messages.json | wc -l | tr -d ' ')
+    print_info "  言語数: $LOCALE_COUNT"
+else
+    print_warning "_locales/ ディレクトリが見つかりません"
 fi
 
 # .gitkeep ファイルを削除（不要なファイル）

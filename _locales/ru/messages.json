@@ -1,0 +1,164 @@
+{
+  "appName": {
+    "message": "BoxNote DL"
+  },
+  "appDesc": {
+    "message": "Скачивайте Box Notes в формате Markdown с изображениями в ZIP-архиве."
+  },
+  "subtitle": {
+    "message": "MARKDOWN"
+  },
+  "loadingTitle": {
+    "message": "Загрузка..."
+  },
+  "metaChecking": {
+    "message": "Проверка"
+  },
+  "noteType": {
+    "message": "BoxNote"
+  },
+  "downloadBtn": {
+    "message": "⬇ Скачать как Markdown"
+  },
+  "downloading": {
+    "message": "↻ Загрузка..."
+  },
+  "dlStatus": {
+    "message": "Получение вложений"
+  },
+  "historyLink": {
+    "message": "Последние загрузки"
+  },
+  "successCheck": {
+    "message": "✓ Сохранено"
+  },
+  "openBtn": {
+    "message": "📂 Открыть"
+  },
+  "unsupportedTitle": {
+    "message": "Откройте Box Note"
+  },
+  "unsupportedDesc": {
+    "message": "Эта вкладка не является Box Note."
+  },
+  "openBoxBtn": {
+    "message": "Открыть Box ↗"
+  },
+  "errorTitle": {
+    "message": "Ошибка"
+  },
+  "retryBtn": {
+    "message": "Повторить"
+  },
+  "settingsTitle": {
+    "message": "Настройки"
+  },
+  "settingsSmall": {
+    "message": "SETTINGS"
+  },
+  "settingFilenameLabel": {
+    "message": "Шаблон имени файла"
+  },
+  "filenamePreviewPrefix": {
+    "message": "Пример: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1",
+        "example": "Monthly review_2026-05-18.md"
+      }
+    }
+  },
+  "settingIncludeAssetsTitle": {
+    "message": "Включить вложения"
+  },
+  "settingIncludeAssetsDesc": {
+    "message": "Упаковать изображения в ZIP"
+  },
+  "settingAutoOpenTitle": {
+    "message": "Открывать после загрузки"
+  },
+  "settingAutoOpenDesc": {
+    "message": "Показать папку загрузок"
+  },
+  "settingNotificationTitle": {
+    "message": "Уведомление о завершении"
+  },
+  "settingNotificationDesc": {
+    "message": "Показывать уведомление Chrome"
+  },
+  "settingLogLevelTitle": {
+    "message": "Уровень журналирования"
+  },
+  "settingLogLevelDesc": {
+    "message": "Для отладки выберите verbose"
+  },
+  "settingLanguageTitle": {
+    "message": "Язык"
+  },
+  "settingLanguageDesc": {
+    "message": "По умолчанию используется язык браузера"
+  },
+  "languageAuto": {
+    "message": "Авто (язык браузера)"
+  },
+  "helpLink": {
+    "message": "Справка"
+  },
+  "errAuthTitle": {
+    "message": "Выполнен выход"
+  },
+  "errAuthDesc": {
+    "message": "Срок действия сеанса входа в Box истёк. Войдите в Box ещё раз и повторите попытку."
+  },
+  "errAuthAction": {
+    "message": "Войти в Box"
+  },
+  "errRateTitle": {
+    "message": "Превышен лимит запросов"
+  },
+  "errRateDesc": {
+    "message": "Достигнут предел использования Box API. Повторите попытку примерно через минуту."
+  },
+  "errRateAction": {
+    "message": "Попробовать снова"
+  },
+  "errNetworkTitle": {
+    "message": "Сетевая ошибка"
+  },
+  "errNetworkDesc": {
+    "message": "Не удаётся подключиться к интернету. Проверьте сетевое подключение."
+  },
+  "errNetworkAction": {
+    "message": "Повторить"
+  },
+  "errSizeTitle": {
+    "message": "Заметка слишком большая"
+  },
+  "errSizeDesc": {
+    "message": "С вложениями превышается 100 МБ. Исключите вложения в настройках или скачайте их отдельно."
+  },
+  "errSizeAction": {
+    "message": "Скачать без вложений"
+  },
+  "errPermissionTitle": {
+    "message": "Нет доступа"
+  },
+  "errPermissionDesc": {
+    "message": "У вас нет прав на просмотр этой заметки. Попросите владельца предоставить доступ."
+  },
+  "errPermissionAction": {
+    "message": "Повторить"
+  },
+  "errConvertTitle": {
+    "message": "Некоторые блоки не удалось преобразовать"
+  },
+  "errConvertDesc": {
+    "message": "Пользовательские блоки не удалось преобразовать в Markdown. Они будут сохранены как заполнители."
+  },
+  "errConvertAction": {
+    "message": "Скачать с заполнителями"
+  },
+  "errUnknown": {
+    "message": "Неизвестная ошибка"
+  }
+}
