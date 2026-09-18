@@ -1,0 +1,164 @@
+{
+  "appName": {
+    "message": "BoxNote DL"
+  },
+  "appDesc": {
+    "message": "Box Notes Markdown হিসেবে ডাউনলোড করুন, ছবি ZIP-এ বান্ডিল সহ।"
+  },
+  "subtitle": {
+    "message": "MARKDOWN"
+  },
+  "loadingTitle": {
+    "message": "লোড হচ্ছে..."
+  },
+  "metaChecking": {
+    "message": "যাচাই করা হচ্ছে"
+  },
+  "noteType": {
+    "message": "BoxNote"
+  },
+  "downloadBtn": {
+    "message": "⬇ Markdown হিসেবে ডাউনলোড"
+  },
+  "downloading": {
+    "message": "↻ ডাউনলোড হচ্ছে..."
+  },
+  "dlStatus": {
+    "message": "সংযুক্তি আনা হচ্ছে"
+  },
+  "historyLink": {
+    "message": "সাম্প্রতিক ডাউনলোড ইতিহাস"
+  },
+  "successCheck": {
+    "message": "✓ সংরক্ষণ করা হয়েছে"
+  },
+  "openBtn": {
+    "message": "📂 খুলুন"
+  },
+  "unsupportedTitle": {
+    "message": "একটি Box Note খুলুন"
+  },
+  "unsupportedDesc": {
+    "message": "এই ট্যাবটি Box Note নয়।"
+  },
+  "openBoxBtn": {
+    "message": "Box খুলুন ↗"
+  },
+  "errorTitle": {
+    "message": "ত্রুটি"
+  },
+  "retryBtn": {
+    "message": "পুনরায় চেষ্টা"
+  },
+  "settingsTitle": {
+    "message": "সেটিংস"
+  },
+  "settingsSmall": {
+    "message": "SETTINGS"
+  },
+  "settingFilenameLabel": {
+    "message": "ফাইলের নামের ধরন"
+  },
+  "filenamePreviewPrefix": {
+    "message": "উদাহরণ: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1",
+        "example": "Monthly review_2026-05-18.md"
+      }
+    }
+  },
+  "settingIncludeAssetsTitle": {
+    "message": "সংযুক্তি অন্তর্ভুক্ত করুন"
+  },
+  "settingIncludeAssetsDesc": {
+    "message": "ছবি ZIP-এ বান্ডিল করুন"
+  },
+  "settingAutoOpenTitle": {
+    "message": "ডাউনলোডের পর খুলুন"
+  },
+  "settingAutoOpenDesc": {
+    "message": "ডাউনলোড ফোল্ডার দেখান"
+  },
+  "settingNotificationTitle": {
+    "message": "সমাপ্তির বিজ্ঞপ্তি"
+  },
+  "settingNotificationDesc": {
+    "message": "Chrome বিজ্ঞপ্তি দেখান"
+  },
+  "settingLogLevelTitle": {
+    "message": "লগ স্তর"
+  },
+  "settingLogLevelDesc": {
+    "message": "ডিবাগ করার সময় verbose ব্যবহার করুন"
+  },
+  "settingLanguageTitle": {
+    "message": "ভাষা"
+  },
+  "settingLanguageDesc": {
+    "message": "ডিফল্টরূপে ব্রাউজারের ভাষা অনুসরণ করে"
+  },
+  "languageAuto": {
+    "message": "স্বয়ংক্রিয় (ব্রাউজারের ভাষা)"
+  },
+  "helpLink": {
+    "message": "সহায়তা"
+  },
+  "errAuthTitle": {
+    "message": "সাইন আউট হয়েছে"
+  },
+  "errAuthDesc": {
+    "message": "আপনার Box লগইন সেশন মেয়াদোত্তীর্ণ। অনুগ্রহ করে আবার Box-এ লগ ইন করুন।"
+  },
+  "errAuthAction": {
+    "message": "Box-এ লগ ইন করুন"
+  },
+  "errRateTitle": {
+    "message": "অনুরোধের সীমা পূর্ণ"
+  },
+  "errRateDesc": {
+    "message": "Box API-এর সীমা পূর্ণ হয়েছে। প্রায় এক মিনিট পর আবার চেষ্টা করুন।"
+  },
+  "errRateAction": {
+    "message": "আবার চেষ্টা করুন"
+  },
+  "errNetworkTitle": {
+    "message": "নেটওয়ার্ক ত্রুটি"
+  },
+  "errNetworkDesc": {
+    "message": "ইন্টারনেটে সংযোগ করা যাচ্ছে না। নেটওয়ার্ক সংযোগ পরীক্ষা করুন।"
+  },
+  "errNetworkAction": {
+    "message": "পুনরায় চেষ্টা"
+  },
+  "errSizeTitle": {
+    "message": "নোটটি অনেক বড়"
+  },
+  "errSizeDesc": {
+    "message": "সংযুক্তি সহ 100MB ছাড়িয়ে যায়। সেটিংসে সংযুক্তি বাদ দিন বা আলাদাভাবে ডাউনলোড করুন।"
+  },
+  "errSizeAction": {
+    "message": "সংযুক্তি ছাড়া ডাউনলোড"
+  },
+  "errPermissionTitle": {
+    "message": "অ্যাক্সেসের অনুমতি নেই"
+  },
+  "errPermissionDesc": {
+    "message": "এই নোট দেখার অনুমতি আপনার নেই। মালিককে শেয়ারিং অনুমতি দিতে বলুন।"
+  },
+  "errPermissionAction": {
+    "message": "পুনরায় চেষ্টা"
+  },
+  "errConvertTitle": {
+    "message": "কিছু ব্লক রূপান্তর করা যায়নি"
+  },
+  "errConvertDesc": {
+    "message": "কাস্টম ব্লক Markdown-এ রূপান্তর করা যায়নি। প্লেসহোল্ডার হিসেবে সংরক্ষণ করা হবে।"
+  },
+  "errConvertAction": {
+    "message": "প্লেসহোল্ডার সহ ডাউনলোড"
+  },
+  "errUnknown": {
+    "message": "অজানা ত্রুটি"
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "appName": {
+    "message": "BoxNote DL"
+  },
+  "appDesc": {
+    "message": "تنزيل Box Notes بصيغة Markdown، مع تجميع الصور في ملف ZIP."
+  },
+  "subtitle": {
+    "message": "MARKDOWN"
+  },
+  "loadingTitle": {
+    "message": "جارٍ التحميل..."
+  },
+  "metaChecking": {
+    "message": "جارٍ التحقق"
+  },
+  "noteType": {
+    "message": "BoxNote"
+  },
+  "downloadBtn": {
+    "message": "⬇ تنزيل بصيغة Markdown"
+  },
+  "downloading": {
+    "message": "↻ جارٍ التنزيل..."
+  },
+  "dlStatus": {
+    "message": "جارٍ إحضار المرفقات"
+  },
+  "historyLink": {
+    "message": "سجل التنزيلات الأخيرة"
+  },
+  "successCheck": {
+    "message": "✓ تم الحفظ"
+  },
+  "openBtn": {
+    "message": "📂 فتح"
+  },
+  "unsupportedTitle": {
+    "message": "افتح Box Note"
+  },
+  "unsupportedDesc": {
+    "message": "هذه العلامة ليست Box Note."
+  },
+  "openBoxBtn": {
+    "message": "فتح Box ↗"
+  },
+  "errorTitle": {
+    "message": "خطأ"
+  },
+  "retryBtn": {
+    "message": "إعادة المحاولة"
+  },
+  "settingsTitle": {
+    "message": "الإعدادات"
+  },
+  "settingsSmall": {
+    "message": "SETTINGS"
+  },
+  "settingFilenameLabel": {
+    "message": "نمط اسم الملف"
+  },
+  "filenamePreviewPrefix": {
+    "message": "مثال: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1",
+        "example": "Monthly review_2026-05-18.md"
+      }
+    }
+  },
+  "settingIncludeAssetsTitle": {
+    "message": "تضمين المرفقات"
+  },
+  "settingIncludeAssetsDesc": {
+    "message": "تجميع الصور في ملف ZIP"
+  },
+  "settingAutoOpenTitle": {
+    "message": "الفتح بعد التنزيل"
+  },
+  "settingAutoOpenDesc": {
+    "message": "إظهار مجلد التنزيلات"
+  },
+  "settingNotificationTitle": {
+    "message": "إشعار عند الاكتمال"
+  },
+  "settingNotificationDesc": {
+    "message": "إظهار إشعار Chrome"
+  },
+  "settingLogLevelTitle": {
+    "message": "مستوى السجل"
+  },
+  "settingLogLevelDesc": {
+    "message": "استخدم verbose عند تصحيح الأخطاء"
+  },
+  "settingLanguageTitle": {
+    "message": "اللغة"
+  },
+  "settingLanguageDesc": {
+    "message": "يتبع لغة المتصفح افتراضيًا"
+  },
+  "languageAuto": {
+    "message": "تلقائي (لغة المتصفح)"
+  },
+  "helpLink": {
+    "message": "المساعدة"
+  },
+  "errAuthTitle": {
+    "message": "تم تسجيل الخروج"
+  },
+  "errAuthDesc": {
+    "message": "انتهت صلاحية جلسة تسجيل الدخول إلى Box. يرجى تسجيل الدخول إلى Box مرة أخرى ثم المحاولة."
+  },
+  "errAuthAction": {
+    "message": "تسجيل الدخول إلى Box"
+  },
+  "errRateTitle": {
+    "message": "تجاوز حد الطلبات"
+  },
+  "errRateDesc": {
+    "message": "تم بلوغ حد استخدام Box API. يرجى المحاولة مرة أخرى بعد حوالي دقيقة."
+  },
+  "errRateAction": {
+    "message": "المحاولة مرة أخرى"
+  },
+  "errNetworkTitle": {
+    "message": "خطأ في الشبكة"
+  },
+  "errNetworkDesc": {
+    "message": "لا يمكن الاتصال بالإنترنت. يرجى التحقق من اتصال الشبكة."
+  },
+  "errNetworkAction": {
+    "message": "إعادة المحاولة"
+  },
+  "errSizeTitle": {
+    "message": "الملاحظة كبيرة جدًا"
+  },
+  "errSizeDesc": {
+    "message": "تضمين المرفقات يتجاوز 100 ميغابايت. استبعد المرفقات من الإعدادات أو نزّلها بشكل منفصل."
+  },
+  "errSizeAction": {
+    "message": "التنزيل بدون مرفقات"
+  },
+  "errPermissionTitle": {
+    "message": "لا توجد صلاحية وصول"
+  },
+  "errPermissionDesc": {
+    "message": "ليست لديك صلاحية لعرض هذه الملاحظة. اطلب من المالك منحك صلاحية المشاركة."
+  },
+  "errPermissionAction": {
+    "message": "إعادة المحاولة"
+  },
+  "errConvertTitle": {
+    "message": "تعذر تحويل بعض الكتل"
+  },
+  "errConvertDesc": {
+    "message": "تعذر تحويل الكتل المخصصة إلى Markdown. سيتم حفظها كعناصر نائبة."
+  },
+  "errConvertAction": {
+    "message": "التنزيل مع العناصر النائبة"
+  },
+  "errUnknown": {
+    "message": "خطأ غير معروف"
+  }
+}

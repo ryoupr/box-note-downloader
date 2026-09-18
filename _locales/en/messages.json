@@ -1,0 +1,164 @@
+{
+  "appName": {
+    "message": "BoxNote DL"
+  },
+  "appDesc": {
+    "message": "Download Box Notes as Markdown, with images bundled as ZIP."
+  },
+  "subtitle": {
+    "message": "MARKDOWN"
+  },
+  "loadingTitle": {
+    "message": "Loading..."
+  },
+  "metaChecking": {
+    "message": "Checking..."
+  },
+  "noteType": {
+    "message": "BoxNote"
+  },
+  "downloadBtn": {
+    "message": "⬇ Download as Markdown"
+  },
+  "downloading": {
+    "message": "↻ Downloading..."
+  },
+  "dlStatus": {
+    "message": "Fetching attachments"
+  },
+  "historyLink": {
+    "message": "Recent download history"
+  },
+  "successCheck": {
+    "message": "✓ Saved"
+  },
+  "openBtn": {
+    "message": "📂 Open"
+  },
+  "unsupportedTitle": {
+    "message": "Open a Box Note"
+  },
+  "unsupportedDesc": {
+    "message": "This tab is not a Box Note."
+  },
+  "openBoxBtn": {
+    "message": "Open Box ↗"
+  },
+  "errorTitle": {
+    "message": "Error"
+  },
+  "retryBtn": {
+    "message": "Retry"
+  },
+  "settingsTitle": {
+    "message": "Settings"
+  },
+  "settingsSmall": {
+    "message": "SETTINGS"
+  },
+  "settingFilenameLabel": {
+    "message": "Filename pattern"
+  },
+  "filenamePreviewPrefix": {
+    "message": "Example: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1",
+        "example": "Monthly review_2026-05-18.md"
+      }
+    }
+  },
+  "settingIncludeAssetsTitle": {
+    "message": "Include attachments"
+  },
+  "settingIncludeAssetsDesc": {
+    "message": "Bundle images in a ZIP"
+  },
+  "settingAutoOpenTitle": {
+    "message": "Open after download"
+  },
+  "settingAutoOpenDesc": {
+    "message": "Show the downloads folder"
+  },
+  "settingNotificationTitle": {
+    "message": "Completion notification"
+  },
+  "settingNotificationDesc": {
+    "message": "Show a Chrome notification"
+  },
+  "settingLogLevelTitle": {
+    "message": "Log level"
+  },
+  "settingLogLevelDesc": {
+    "message": "Use verbose when debugging"
+  },
+  "settingLanguageTitle": {
+    "message": "Language"
+  },
+  "settingLanguageDesc": {
+    "message": "Follows your browser language by default"
+  },
+  "languageAuto": {
+    "message": "Auto (browser language)"
+  },
+  "helpLink": {
+    "message": "Help"
+  },
+  "errAuthTitle": {
+    "message": "Signed out"
+  },
+  "errAuthDesc": {
+    "message": "Your Box login session has expired. Please log in to Box again and try."
+  },
+  "errAuthAction": {
+    "message": "Log in to Box"
+  },
+  "errRateTitle": {
+    "message": "Rate limited"
+  },
+  "errRateDesc": {
+    "message": "The Box API limit has been reached. Please try again in about a minute."
+  },
+  "errRateAction": {
+    "message": "Try again"
+  },
+  "errNetworkTitle": {
+    "message": "Network error"
+  },
+  "errNetworkDesc": {
+    "message": "Cannot connect to the internet. Please check your network connection."
+  },
+  "errNetworkAction": {
+    "message": "Retry"
+  },
+  "errSizeTitle": {
+    "message": "Note is too large"
+  },
+  "errSizeDesc": {
+    "message": "Including attachments exceeds 100MB. Exclude attachments in Settings or download them individually."
+  },
+  "errSizeAction": {
+    "message": "Download without attachments"
+  },
+  "errPermissionTitle": {
+    "message": "No access permission"
+  },
+  "errPermissionDesc": {
+    "message": "You don't have permission to view this note. Ask the owner to share it with you."
+  },
+  "errPermissionAction": {
+    "message": "Retry"
+  },
+  "errConvertTitle": {
+    "message": "Some blocks couldn't be converted"
+  },
+  "errConvertDesc": {
+    "message": "Custom blocks couldn't be converted to Markdown. They are saved as placeholders."
+  },
+  "errConvertAction": {
+    "message": "Download with placeholders"
+  },
+  "errUnknown": {
+    "message": "Unknown error"
+  }
+}

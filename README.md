@@ -40,7 +40,7 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 
 ⚙ ボタンから以下を設定可能：
 
-- **出力フォーマット**: .md / .html / .txt
+- **言語**: 自動（ブラウザの言語）/ English / 日本語 / 简体中文 / Español / हिन्दी / العربية / Português (Brasil) / Русский / বাংলা
 - **ファイル名パターン**: `{title}_{yyyy-mm-dd}` 等
 - **添付ファイルを含める**: OFF で画像を無視して単体ファイル出力
 - **DL後に自動で開く**: ダウンロードフォルダを自動表示
@@ -56,6 +56,26 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 
 タイトルに使えない文字（`<` `>` `:` `"` `/` `\` `|` `?` `*`）は `_` に置き換わります。
 
+## 多言語対応
+
+9言語に対応（`_locales/` + `default_locale: en` の標準 `chrome.i18n` 方式）：
+
+| 言語 | ロケール |
+|------|----------|
+| English（デフォルト） | `en` |
+| 日本語 | `ja` |
+| 简体中文 | `zh_CN` |
+| Español | `es` |
+| हिन्दी | `hi` |
+| العربية（RTL） | `ar` |
+| Português (Brasil) | `pt_BR` |
+| Русский | `ru` |
+| বাংলা | `bn` |
+
+- **デフォルト表示言語**: Chrome の UI 言語に自動追従（`chrome.i18n.getUILanguage()`）。未対応言語の場合は英語にフォールバック
+- **手動切替**: 設定画面の「言語」から変更可能（`chrome.storage.local` の `uiLanguage` に保存、`lib/i18n.js` が選択言語の `messages.json` を動的読込して即時反映）
+- **Chrome Web Store での表明**: `_locales/` を含めて公開すると、Developer Dashboard の Store listing タブで言語ごとの説明文・スクリーンショットを登録可能（詳細: https://developer.chrome.com/docs/webstore/cws-dashboard-listing ）
+
 ## 開発
 
 ```bash
@@ -69,6 +89,7 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 ## 技術仕様
 
 - Manifest V3
+- i18n: 標準 `chrome.i18n`（`_locales/` 9言語）+ 設定切替用カスタムレイヤー `lib/i18n.js`
 - Content Script: ProseMirror DOM → Markdown 変換
 - Background Service Worker: JSZip による ZIP 生成
 - 対象: `https://*.app.box.com/notes/*` + `https://notes.services.box.com/*`（iframe）
