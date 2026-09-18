@@ -90,7 +90,7 @@
       <div class="note-info"><div class="note-title" id="note-title">読み込み中...</div><div class="note-meta"><span id="note-type">BoxNote</span> ・ <span id="note-meta-text">確認中</span></div></div>
     </div>
     <button class="download-btn" id="btn-download">⬇ Markdownでダウンロード</button>
-    <div class="footer"><a id="history-link">最近のDL履歴</a><span>v0.1.2</span></div>
+    <div class="footer"><a id="open-downloads-folder-link">ダウンロードフォルダを開く</a><span>v0.1.2</span></div>
   </div>
 
   <!-- ===== DOWNLOADING ===== -->
@@ -164,6 +164,7 @@
       <div class="setting-label">ファイル名パターン</div>
       <input class="setting-input" id="setting-filename" value="{title}_{yyyy-mm-dd}">
       <div class="setting-hint" id="filename-preview">例: 月次レビュー_2026-05-18.md</div>
+      <div class="setting-hint">利用できる変数は<a href="https://github.com/ryoupr/box-note-downloader/blob/main/README.md#filename-pattern" target="_blank" rel="noopener noreferrer">こちら</a></div>
     </div>
 
     <div class="setting-section">
@@ -172,7 +173,7 @@
         <label class="toggle"><input type="checkbox" id="setting-include-assets" checked><span class="toggle-slider"></span></label>
       </div>
       <div class="setting-row">
-        <div class="setting-row-text"><div class="setting-row-title">DL後に自動で開</div><div class="setting-row-desc">既定のアプリで開く</div></div>
+        <div class="setting-row-text"><div class="setting-row-title">DL後に自動で開く</div><div class="setting-row-desc">既定のアプリで開く</div></div>
         <label class="toggle"><input type="checkbox" id="setting-auto-open"><span class="toggle-slider"></span></label>
       </div>
       <div class="setting-row">
@@ -194,7 +195,7 @@
       </div>
     </div>
 
-    <div class="footer"><a href="#">ヘルプ</a><span>v0.1.2</span></div>
+    <div class="footer"><a href="https://github.com/ryoupr/box-note-downloader" target="_blank" rel="noopener noreferrer">ヘルプ</a><span>v0.1.2</span></div>
     <div class="dev-only hidden" style="margin-top: 12px;">
       <button class="action-btn" id="btn-debug-dom">🔍 DOM Debug</button>
     </div>
