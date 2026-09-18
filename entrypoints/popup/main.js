@@ -1,3 +1,6 @@
+// Bundled by Vite: side-effect import registers globalThis.BoxNoteI18n.
+import './i18n.js';
+
 // === State Management ===
 function showState(id) {
   document.querySelectorAll(".state").forEach((el) => el.classList.remove("active"));

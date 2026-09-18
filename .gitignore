@@ -5,6 +5,8 @@ CLAUDE.md
 # Build artifacts
 *.zip
 temp-chrome-extension/
+.output
+.wxt
 
 # OS files
 .DS_Store
@@ -15,9 +17,8 @@ Thumbs.db
 .vscode/
 *.swp
 
-# Node (if ever used)
+# Node
 node_modules/
-package-lock.json
 
 # Screenshots (may contain sensitive content)
 screenshot/*.png
