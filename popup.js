@@ -195,8 +195,8 @@ function updateFilenamePreview(pattern, format) {
   document.getElementById("filename-preview").textContent = prefix;
 }
 
-// History link
-document.getElementById("history-link")?.addEventListener("click", () => chrome.downloads.showDefaultFolder());
+// Downloads folder link
+document.getElementById("open-downloads-folder-link")?.addEventListener("click", () => chrome.downloads.showDefaultFolder());
 
 // === DOM Debug ===
 document.getElementById("btn-debug-dom")?.addEventListener("click", async () => {
