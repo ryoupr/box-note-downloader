@@ -112,11 +112,13 @@ jobs:
             -H "Authorization: Bearer $TOKEN" \
             --data-binary "@$ZIP")"
           UPLOAD_STATE="$(printf '%s' "$UPLOAD_RESP" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("uploadState", ""))')"
-          if [ "$UPLOAD_STATE" != 'SUCCESS' ]; then
+          # v2 API の uploadState は SUCCEEDED が成功値（v1 の SUCCESS とは異なる）。
+          # API 実測値に基づく（2026-09-18 の実行で SUCCEEDED を確認）。
+          if [ "$UPLOAD_STATE" != 'SUCCEEDED' ] && [ "$UPLOAD_STATE" != 'SUCCESS' ]; then
             echo "Upload failed: $UPLOAD_RESP" >&2
             exit 1
           fi
-          echo 'Upload state: SUCCESS'
+          echo "Upload state: $UPLOAD_STATE"
 
           PUBLISH_RESP="$(curl -sS -X POST \
             "https://chromewebstore.googleapis.com/v2/publishers/${PUBLISHER_ID}/items/${EXTENSION_ID}:publish" \
