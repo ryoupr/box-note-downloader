@@ -1,0 +1,67 @@
+name: release
+
+# main への push を起点に、package.json の version に対応するタグが
+# 未存在のときだけビルド→GitHub Release 作成→ストア提出申請を行う。
+# Chrome Web Store への提出は Secrets 登録後に自動で有効化される
+#（未設定の間はスキップされる）。
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'package.json'
+      - 'wxt.config.ts'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Secrets は if: で直接参照できないため job 環境変数経由で参照する。
+    # 未設定の Secret は空文字になることを利用して submit の要否を判定する。
+    env:
+      CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # タグ参照のため全履歴取得
+          fetch-tags: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - id: check
+        run: |
+          if git rev-parse "v${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build store package
+        if: steps.check.outputs.exists == 'false'
+        run: npm run zip
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: .output/*.zip
+
+      - name: Submit to Chrome Web Store
+        if: steps.check.outputs.exists == 'false' && env.CHROME_CLIENT_ID != ''
+        run: npx wxt submit --chrome-zip .output/*-chrome.zip
+        env:
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
