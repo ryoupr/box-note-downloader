@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="manifest.type" content="browser_action" />
+    <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { width: 320px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; padding: 16px; }
 
@@ -80,7 +82,7 @@
   <div id="state-idle" class="state active">
     <div class="header">
       <div class="header-left">
-        <img class="header-icon" src="icons/icon48.png" alt="">
+        <img class="header-icon" src="/icons/icon48.png" alt="">
         <div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div>
       </div>
       <button class="settings-btn" id="btn-settings">⚙</button>
@@ -96,7 +98,7 @@
   <!-- ===== DOWNLOADING ===== -->
   <div id="state-downloading" class="state">
     <div class="header">
-      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
+      <div class="header-left"><img class="header-icon" src="/icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
       <button class="settings-btn" disabled>⚙</button>
     </div>
     <div class="note-card">
@@ -111,7 +113,7 @@
   <!-- ===== SUCCESS ===== -->
   <div id="state-success" class="state">
     <div class="header">
-      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
+      <div class="header-left"><img class="header-icon" src="/icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
       <button class="settings-btn" id="btn-settings-success">⚙</button>
     </div>
     <div class="note-card">
@@ -126,7 +128,7 @@
   <!-- ===== UNSUPPORTED ===== -->
   <div id="state-unsupported" class="state">
     <div class="header">
-      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
+      <div class="header-left"><img class="header-icon" src="/icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
       <button class="settings-btn" id="btn-settings-unsupported">⚙</button>
     </div>
     <div class="error-icon">⚠️</div>
@@ -138,7 +140,7 @@
   <!-- ===== ERROR ===== -->
   <div id="state-error" class="state">
     <div class="header">
-      <div class="header-left"><img class="header-icon" src="icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
+      <div class="header-left"><img class="header-icon" src="/icons/icon48.png" alt=""><div><div class="header-title" data-i18n="appName">BoxNote DL</div><div class="header-subtitle">→ <span data-i18n="subtitle">MARKDOWN</span></div></div></div>
       <button class="settings-btn" id="btn-settings-error">⚙</button>
     </div>
     <div class="note-card">
@@ -217,7 +219,6 @@
     </div>
   </div>
 
-  <script src="lib/i18n.js"></script>
-  <script src="popup.js"></script>
+  <script type="module" src="./main.js"></script>
 </body>
 </html>

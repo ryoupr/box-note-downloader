@@ -80,11 +80,19 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 ## 開発
 
 ```bash
-# アイコン生成
-./script/generate-icons.sh source-icon.png
+npm install
+
+# 開発モード（HMR付き）
+npm run dev
+
+# プロダクションビルド
+npm run build
 
 # Chrome Web Store 用 ZIP 作成
-./script/build-chrome-extension.sh
+npm run zip
+
+# アイコン生成
+./script/generate-icons.sh source-icon.png
 ```
 
 ## 技術仕様
