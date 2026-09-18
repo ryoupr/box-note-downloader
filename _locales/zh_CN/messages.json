@@ -1,0 +1,164 @@
+{
+  "appName": {
+    "message": "BoxNote DL"
+  },
+  "appDesc": {
+    "message": "将 Box Notes 下载为 Markdown，图片打包为 ZIP。"
+  },
+  "subtitle": {
+    "message": "MARKDOWN"
+  },
+  "loadingTitle": {
+    "message": "加载中..."
+  },
+  "metaChecking": {
+    "message": "检查中"
+  },
+  "noteType": {
+    "message": "BoxNote"
+  },
+  "downloadBtn": {
+    "message": "⬇ 下载为 Markdown"
+  },
+  "downloading": {
+    "message": "↻ 正在下载..."
+  },
+  "dlStatus": {
+    "message": "正在获取附件"
+  },
+  "historyLink": {
+    "message": "最近的下载记录"
+  },
+  "successCheck": {
+    "message": "✓ 已保存"
+  },
+  "openBtn": {
+    "message": "📂 打开"
+  },
+  "unsupportedTitle": {
+    "message": "请打开 Box Note"
+  },
+  "unsupportedDesc": {
+    "message": "此标签页不是 Box Note。"
+  },
+  "openBoxBtn": {
+    "message": "打开 Box ↗"
+  },
+  "errorTitle": {
+    "message": "错误"
+  },
+  "retryBtn": {
+    "message": "重试"
+  },
+  "settingsTitle": {
+    "message": "设置"
+  },
+  "settingsSmall": {
+    "message": "SETTINGS"
+  },
+  "settingFilenameLabel": {
+    "message": "文件名模式"
+  },
+  "filenamePreviewPrefix": {
+    "message": "示例：$TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1",
+        "example": "Monthly review_2026-05-18.md"
+      }
+    }
+  },
+  "settingIncludeAssetsTitle": {
+    "message": "包含附件"
+  },
+  "settingIncludeAssetsDesc": {
+    "message": "将图片打包为 ZIP"
+  },
+  "settingAutoOpenTitle": {
+    "message": "下载后自动打开"
+  },
+  "settingAutoOpenDesc": {
+    "message": "显示下载文件夹"
+  },
+  "settingNotificationTitle": {
+    "message": "完成通知"
+  },
+  "settingNotificationDesc": {
+    "message": "显示 Chrome 通知"
+  },
+  "settingLogLevelTitle": {
+    "message": "日志级别"
+  },
+  "settingLogLevelDesc": {
+    "message": "调试时使用 verbose"
+  },
+  "settingLanguageTitle": {
+    "message": "语言"
+  },
+  "settingLanguageDesc": {
+    "message": "默认跟随浏览器语言"
+  },
+  "languageAuto": {
+    "message": "自动（浏览器语言）"
+  },
+  "helpLink": {
+    "message": "帮助"
+  },
+  "errAuthTitle": {
+    "message": "登录已过期"
+  },
+  "errAuthDesc": {
+    "message": "Box 的登录会话已过期。请重新登录 Box 后重试。"
+  },
+  "errAuthAction": {
+    "message": "登录 Box"
+  },
+  "errRateTitle": {
+    "message": "请求受限"
+  },
+  "errRateDesc": {
+    "message": "已达到 Box API 的使用限制。请约 1 分钟后重试。"
+  },
+  "errRateAction": {
+    "message": "再试一次"
+  },
+  "errNetworkTitle": {
+    "message": "网络错误"
+  },
+  "errNetworkDesc": {
+    "message": "无法连接互联网。请检查网络状况。"
+  },
+  "errNetworkAction": {
+    "message": "重试"
+  },
+  "errSizeTitle": {
+    "message": "笔记过大"
+  },
+  "errSizeDesc": {
+    "message": "包含附件会超过 100MB。请在设置中排除附件，或单独下载附件。"
+  },
+  "errSizeAction": {
+    "message": "排除附件下载"
+  },
+  "errPermissionTitle": {
+    "message": "没有访问权限"
+  },
+  "errPermissionDesc": {
+    "message": "您没有查看此笔记的权限。请向所有者申请共享权限。"
+  },
+  "errPermissionAction": {
+    "message": "重试"
+  },
+  "errConvertTitle": {
+    "message": "部分区块无法转换"
+  },
+  "errConvertDesc": {
+    "message": "自定义区块无法转换为 Markdown，将作为占位符保存。"
+  },
+  "errConvertAction": {
+    "message": "以占位符下载"
+  },
+  "errUnknown": {
+    "message": "未知错误"
+  }
+}

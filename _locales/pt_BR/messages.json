@@ -1,0 +1,164 @@
+{
+  "appName": {
+    "message": "BoxNote DL"
+  },
+  "appDesc": {
+    "message": "Baixe Box Notes como Markdown, com imagens agrupadas em um ZIP."
+  },
+  "subtitle": {
+    "message": "MARKDOWN"
+  },
+  "loadingTitle": {
+    "message": "Carregando..."
+  },
+  "metaChecking": {
+    "message": "Verificando"
+  },
+  "noteType": {
+    "message": "BoxNote"
+  },
+  "downloadBtn": {
+    "message": "⬇ Baixar como Markdown"
+  },
+  "downloading": {
+    "message": "↻ Baixando..."
+  },
+  "dlStatus": {
+    "message": "Buscando anexos"
+  },
+  "historyLink": {
+    "message": "Histórico recente de downloads"
+  },
+  "successCheck": {
+    "message": "✓ Salvo"
+  },
+  "openBtn": {
+    "message": "📂 Abrir"
+  },
+  "unsupportedTitle": {
+    "message": "Abra uma Box Note"
+  },
+  "unsupportedDesc": {
+    "message": "Esta aba não é uma Box Note."
+  },
+  "openBoxBtn": {
+    "message": "Abrir o Box ↗"
+  },
+  "errorTitle": {
+    "message": "Erro"
+  },
+  "retryBtn": {
+    "message": "Tentar novamente"
+  },
+  "settingsTitle": {
+    "message": "Configurações"
+  },
+  "settingsSmall": {
+    "message": "SETTINGS"
+  },
+  "settingFilenameLabel": {
+    "message": "Padrão de nome de arquivo"
+  },
+  "filenamePreviewPrefix": {
+    "message": "Exemplo: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1",
+        "example": "Revisao mensal_2026-05-18.md"
+      }
+    }
+  },
+  "settingIncludeAssetsTitle": {
+    "message": "Incluir anexos"
+  },
+  "settingIncludeAssetsDesc": {
+    "message": "Agrupar imagens em um ZIP"
+  },
+  "settingAutoOpenTitle": {
+    "message": "Abrir após o download"
+  },
+  "settingAutoOpenDesc": {
+    "message": "Mostrar a pasta de downloads"
+  },
+  "settingNotificationTitle": {
+    "message": "Notificação de conclusão"
+  },
+  "settingNotificationDesc": {
+    "message": "Mostrar uma notificação do Chrome"
+  },
+  "settingLogLevelTitle": {
+    "message": "Nível de log"
+  },
+  "settingLogLevelDesc": {
+    "message": "Use verbose ao depurar"
+  },
+  "settingLanguageTitle": {
+    "message": "Idioma"
+  },
+  "settingLanguageDesc": {
+    "message": "Por padrão, segue o idioma do navegador"
+  },
+  "languageAuto": {
+    "message": "Automático (idioma do navegador)"
+  },
+  "helpLink": {
+    "message": "Ajuda"
+  },
+  "errAuthTitle": {
+    "message": "Sessão encerrada"
+  },
+  "errAuthDesc": {
+    "message": "Sua sessão de login no Box expirou. Faça login no Box novamente e tente."
+  },
+  "errAuthAction": {
+    "message": "Entrar no Box"
+  },
+  "errRateTitle": {
+    "message": "Limite de solicitações"
+  },
+  "errRateDesc": {
+    "message": "O limite da API do Box foi atingido. Tente novamente em cerca de um minuto."
+  },
+  "errRateAction": {
+    "message": "Tentar de novo"
+  },
+  "errNetworkTitle": {
+    "message": "Erro de rede"
+  },
+  "errNetworkDesc": {
+    "message": "Não foi possível conectar à Internet. Verifique sua conexão de rede."
+  },
+  "errNetworkAction": {
+    "message": "Tentar novamente"
+  },
+  "errSizeTitle": {
+    "message": "A nota é muito grande"
+  },
+  "errSizeDesc": {
+    "message": "Incluir os anexos excede 100 MB. Exclua os anexos nas Configurações ou baixe-os individualmente."
+  },
+  "errSizeAction": {
+    "message": "Baixar sem anexos"
+  },
+  "errPermissionTitle": {
+    "message": "Sem permissão de acesso"
+  },
+  "errPermissionDesc": {
+    "message": "Você não tem permissão para ver esta nota. Peça ao proprietário para compartilhar o acesso."
+  },
+  "errPermissionAction": {
+    "message": "Tentar novamente"
+  },
+  "errConvertTitle": {
+    "message": "Alguns blocos não puderam ser convertidos"
+  },
+  "errConvertDesc": {
+    "message": "Blocos personalizados não puderam ser convertidos para Markdown. Eles serão salvos como marcadores de posição."
+  },
+  "errConvertAction": {
+    "message": "Baixar com marcadores"
+  },
+  "errUnknown": {
+    "message": "Erro desconhecido"
+  }
+}
