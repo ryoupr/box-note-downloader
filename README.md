@@ -95,6 +95,10 @@ npm run zip
 ./script/generate-icons.sh source-icon.png
 ```
 
+## リリース
+
+`package.json` の `version` を上げて `main` にマージすると、自動で GitHub Release が作成され Chrome Web Store への提出が行われます。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
+
 ## 技術仕様
 
 - Manifest V3
