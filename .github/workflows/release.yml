@@ -106,7 +106,20 @@ jobs:
             exit 1
           fi
 
-          # v2 API: ZIP アップロード → 状態確認 → 公開申請
+          # v2 API: 審査状態確認 → ZIP アップロード → 状態確認 → 公開申請
+          # 審査中（PENDING_REVIEW）の場合はストア提出のみスキップする。
+          # GitHub Release 作成は継続するため、ここでは exit 0 で正常終了させる。
+          # fetchStatus の取得に失敗した場合は空扱いとし、従来通り upload へ進む（安全側）。
+          STATUS_RESP="$(curl -sS -X GET \
+            "https://chromewebstore.googleapis.com/v2/publishers/${PUBLISHER_ID}/items/${EXTENSION_ID}:fetchStatus" \
+            -H "Authorization: Bearer $TOKEN" || echo '{}')"
+          SUBMITTED_STATE="$(printf '%s' "$STATUS_RESP" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("submittedItemRevisionStatus",{}).get("state",""))' 2>/dev/null || echo '')"
+          if [ "$SUBMITTED_STATE" = 'PENDING_REVIEW' ]; then
+            echo 'Submission is pending review, skipping upload/publish'
+            exit 0
+          fi
+          echo "Submitted state: ${SUBMITTED_STATE:-unknown}"
+
           UPLOAD_RESP="$(curl -sS -X POST \
             "https://chromewebstore.googleapis.com/upload/v2/publishers/${PUBLISHER_ID}/items/${EXTENSION_ID}:upload" \
             -H "Authorization: Bearer $TOKEN" \
