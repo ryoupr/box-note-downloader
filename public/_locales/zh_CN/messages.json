@@ -101,6 +101,27 @@
   "languageAuto": {
     "message": "自动（浏览器语言）"
   },
+  "settingDeveloperModeTitle": {
+    "message": "开发者模式"
+  },
+  "settingDeveloperModeDesc": {
+    "message": "显示调试功能"
+  },
+  "settingFilenameHint": {
+    "message": "可用变量："
+  },
+  "settingFilenameHelpLink": {
+    "message": "文档"
+  },
+  "settingsBtnLabel": {
+    "message": "打开设置"
+  },
+  "settingsBackLabel": {
+    "message": "返回"
+  },
+  "debugDomBtn": {
+    "message": "🔍 DOM 调试"
+  },
   "helpLink": {
     "message": "帮助"
   },
