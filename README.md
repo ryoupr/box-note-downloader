@@ -102,6 +102,10 @@ npm run zip
 - `main` push: `release.yml` がビルド→GitHub Release→ストア提出を行う
 - `develop` → `main` のPRはストア審査中（`PENDING_REVIEW`）はマージ不可（`store-review-guard` がブロック）
 
+## リリース
+
+`develop` → `main` のリリースPRで `package.json` の `version` を上げてマージすると、自動で GitHub Release が作成され Chrome Web Store への提出が行われます。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
+
 ## 技術仕様
 
 - Manifest V3
