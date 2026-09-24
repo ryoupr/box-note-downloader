@@ -35,8 +35,23 @@ async function saveSettings(s) {
   await chrome.storage.local.set({ settings: s });
 }
 
+// === Version (from manifest, single source of truth) ===
+function initVersion() {
+  try {
+    const { version } = chrome.runtime.getManifest();
+    if (version) {
+      document.querySelectorAll(".app-version").forEach((el) => {
+        el.textContent = `v${version}`;
+      });
+    }
+  } catch {
+    // Ignore: version display stays empty outside extension context
+  }
+}
+
 // === Init ===
 (async () => {
+  initVersion();
   await initLocale();
 
   // Initial dynamic text (kept out of data-i18n so language switching
