@@ -8,7 +8,6 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 
 - 📥 開いている Box Note を Markdown (.md) に変換してダウンロード
 - 🖼️ 画像付きノートは ZIP（Markdown + assets/）で保存
-- ⚙️ 出力フォーマット選択（Markdown / HTML / Plain Text）
 - 📝 ファイル名パターンのカスタマイズ
 - 🚫 リアルタイム編集カーソル（他ユーザーのアバター等）を自動除外
 
