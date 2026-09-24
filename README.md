@@ -95,6 +95,13 @@ npm run zip
 ./script/generate-icons.sh source-icon.png
 ```
 
+### ブランチ運用
+
+- `feature/*` → `develop`: PR で結合・ビルド検証（`ci.yml` のみ、リリースなし）
+- `develop` → `main`: リリースPR（version bump はここでのみ行う）
+- `main` push: `release.yml` がビルド→GitHub Release→ストア提出を行う
+- `develop` → `main` のPRはストア審査中（`PENDING_REVIEW`）はマージ不可（`store-review-guard` がブロック）
+
 ## 技術仕様
 
 - Manifest V3
