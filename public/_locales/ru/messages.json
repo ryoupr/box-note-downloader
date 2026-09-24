@@ -101,6 +101,27 @@
   "languageAuto": {
     "message": "Авто (язык браузера)"
   },
+  "settingDeveloperModeTitle": {
+    "message": "Режим разработчика"
+  },
+  "settingDeveloperModeDesc": {
+    "message": "Показать функции отладки"
+  },
+  "settingFilenameHint": {
+    "message": "Доступные переменные:"
+  },
+  "settingFilenameHelpLink": {
+    "message": "документация"
+  },
+  "settingsBtnLabel": {
+    "message": "Открыть настройки"
+  },
+  "settingsBackLabel": {
+    "message": "Назад"
+  },
+  "debugDomBtn": {
+    "message": "🔍 Отладка DOM"
+  },
   "helpLink": {
     "message": "Справка"
   },

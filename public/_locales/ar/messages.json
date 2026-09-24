@@ -101,6 +101,27 @@
   "languageAuto": {
     "message": "تلقائي (لغة المتصفح)"
   },
+  "settingDeveloperModeTitle": {
+    "message": "وضع المطور"
+  },
+  "settingDeveloperModeDesc": {
+    "message": "إظهار ميزات تصحيح الأخطاء"
+  },
+  "settingFilenameHint": {
+    "message": "المتغيرات المتاحة:"
+  },
+  "settingFilenameHelpLink": {
+    "message": "التوثيق"
+  },
+  "settingsBtnLabel": {
+    "message": "فتح الإعدادات"
+  },
+  "settingsBackLabel": {
+    "message": "رجوع"
+  },
+  "debugDomBtn": {
+    "message": "🔍 تصحيح DOM"
+  },
   "helpLink": {
     "message": "المساعدة"
   },
