@@ -33,6 +33,7 @@
 
     .progress-bar { height: 3px; background: #e0e7ff; border-radius: 2px; margin-top: 10px; overflow: hidden; }
     .progress-fill { height: 100%; background: #3b5cff; border-radius: 2px; animation: progress 2s ease-in-out infinite; }
+    .progress-fill.determinate { animation: none; transition: width 0.2s ease; }
     @keyframes progress { 0%{width:0%} 50%{width:70%} 100%{width:100%} }
     .dl-status { font-size: 11px; color: #666; margin-top: 8px; text-align: center; }
 
@@ -106,7 +107,7 @@
       <div class="note-info"><div class="note-title" id="dl-note-title">-</div><div class="note-meta" data-i18n="noteType">BoxNote</div></div>
     </div>
     <button class="download-btn" disabled data-i18n="downloading">↻ ダウンロード中...</button>
-    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     <div class="dl-status" id="dl-status" data-i18n="dlStatus">添付ファイルを取得しています</div>
   </div>
 
