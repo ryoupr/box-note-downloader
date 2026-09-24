@@ -1,7 +1,10 @@
 name: release
 
+# ブランチ運用: feature/* → develop → main
 # main への push を起点に、package.json の version に対応するタグが
 # 未存在のときだけビルド→GitHub Release 作成→ストア提出申請を行う。
+# すなわち develop → main のマージ時だけリリースされる。
+# feature → develop のPR/ develop push では ci.yml がビルド検証のみ行う。
 # Chrome Web Store への提出はサービスアカウント方式（API v2）で行う。
 # 必要な Secrets（CWS_SERVICE_ACCOUNT_JSON / CHROME_PUBLISHER_ID）が
 # 未設定の間はスキップされる。API v1 系の Secrets（CHROME_CLIENT_* /

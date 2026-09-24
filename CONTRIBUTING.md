@@ -4,8 +4,9 @@ BoxNote DL へのコントリビューションありがとうございます。
 
 ## ブランチ運用
 
-- 作業は Feature ブランチで行い、`main` へ Pull Request を作成してください。
-- `main` への直接 push は行わないでください。
+- 作業は Feature ブランチで行い、`develop` へ Pull Request を作成してください。
+- `develop` → `main` の Pull Request はリリース専用です（`version` bump はここでのみ行う）。
+- `main` / `develop` への直接 push は行わないでください。
 - 1つの Pull Request では1つの目的に絞ってください。
 
 ## 開発手順
@@ -32,12 +33,17 @@ npm run zip
 
 ## リリース手順
 
-1. Feature ブランチで `package.json` の `version` を上げ、Pull Request を作成して `main` にマージします。
+1. `develop` から `main` へのリリース用 Pull Request を作成し、その中で `package.json` の `version` を上げて `main` にマージします。
 2. `main` へのマージ後、CI（`.github/workflows/release.yml`）が自動でビルド→GitHub Release 作成→Chrome Web Store への提出申請を行います。
+3. ストア審査中（`PENDING_REVIEW`）は `develop` → `main` の Pull Request をマージしないでください（`store-review-guard` が自動でブロックします）。
 
 ## CI の起動条件
 
-CI の定義は [.github/workflows/release.yml](.github/workflows/release.yml) を正とします。概要は以下の通りです。
+CI の定義は [.github/workflows/ci.yml](.github/workflows/ci.yml) と [.github/workflows/release.yml](.github/workflows/release.yml) を正とします。概要は以下の通りです。
+
+- `ci.yml`: `develop` / `main` への Pull Request と `develop` への push でビルド検証（`npm ci` → `npm run compile` → `npm run zip`）のみ行います。リリースは行いません。
+- `ci.yml` の `store-review-guard`: `main` への Pull Request 時のみ実行し、ストア審査中（`PENDING_REVIEW`）の場合は失敗させてマージをブロックします。
+- `release.yml`: `main` ブランチへの push のうち、`package.json` または `wxt.config.ts` の変更を含む場合のみ起動します。
 
 - `main` ブランチへの push のうち、`package.json` または `wxt.config.ts` の変更を含む場合のみ起動します。
 - `package.json` の `version` に対応するタグ（`v{version}`）が既に存在する場合は、ビルド・Release 作成・ストア提出のすべてをスキップします。

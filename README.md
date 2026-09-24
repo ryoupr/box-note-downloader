@@ -95,9 +95,16 @@ npm run zip
 ./script/generate-icons.sh source-icon.png
 ```
 
+### ブランチ運用
+
+- `feature/*` → `develop`: PR で結合・ビルド検証（`ci.yml` のみ、リリースなし）
+- `develop` → `main`: リリースPR（version bump はここでのみ行う）
+- `main` push: `release.yml` がビルド→GitHub Release→ストア提出を行う
+- `develop` → `main` のPRはストア審査中（`PENDING_REVIEW`）はマージ不可（`store-review-guard` がブロック）
+
 ## リリース
 
-`package.json` の `version` を上げて `main` にマージすると、自動で GitHub Release が作成され Chrome Web Store への提出が行われます。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
+`develop` → `main` のリリースPRで `package.json` の `version` を上げてマージすると、自動で GitHub Release が作成され Chrome Web Store への提出が行われます。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
 
 ## 技術仕様
 
