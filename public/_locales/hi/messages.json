@@ -101,6 +101,27 @@
   "languageAuto": {
     "message": "स्वतः (ब्राउज़र भाषा)"
   },
+  "settingDeveloperModeTitle": {
+    "message": "डेवलपर मोड"
+  },
+  "settingDeveloperModeDesc": {
+    "message": "डिबगिंग सुविधाएँ दिखाएँ"
+  },
+  "settingFilenameHint": {
+    "message": "उपलब्ध वेरिएबल:"
+  },
+  "settingFilenameHelpLink": {
+    "message": "दस्तावेज़"
+  },
+  "settingsBtnLabel": {
+    "message": "सेटिंग खोलें"
+  },
+  "settingsBackLabel": {
+    "message": "वापस"
+  },
+  "debugDomBtn": {
+    "message": "🔍 DOM डीबग"
+  },
   "helpLink": {
     "message": "सहायता"
   },

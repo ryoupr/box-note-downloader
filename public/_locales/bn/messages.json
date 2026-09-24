@@ -101,6 +101,27 @@
   "languageAuto": {
     "message": "স্বয়ংক্রিয় (ব্রাউজারের ভাষা)"
   },
+  "settingDeveloperModeTitle": {
+    "message": "ডেভেলপার মোড"
+  },
+  "settingDeveloperModeDesc": {
+    "message": "ডিবাগিং বৈশিষ্ট্য দেখান"
+  },
+  "settingFilenameHint": {
+    "message": "উপলব্ধ ভেরিয়েবল:"
+  },
+  "settingFilenameHelpLink": {
+    "message": "ডকস"
+  },
+  "settingsBtnLabel": {
+    "message": "সেটিংস খুলুন"
+  },
+  "settingsBackLabel": {
+    "message": "ফিরে যান"
+  },
+  "debugDomBtn": {
+    "message": "🔍 DOM ডিবাগ"
+  },
   "helpLink": {
     "message": "সহায়তা"
   },
