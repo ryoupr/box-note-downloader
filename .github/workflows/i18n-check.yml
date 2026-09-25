@@ -1,0 +1,34 @@
+name: i18n-check
+
+# 多言語対応の設定漏れをPR段階で検出する。
+# script/check-i18n.py が以下を検証する:
+# - 全ロケールの messages.json が既定ロケール(en)とキー一致・空文字なし
+# - HTML の data-i18n / JS の t("key") の参照切れなし
+# - data-i18n の付いていない日本語決め打ちなし
+# - i18n.js の SUPPORTED と _locales ディレクトリの一致
+on:
+  pull_request:
+    paths:
+      - 'entrypoints/**'
+      - 'public/_locales/**'
+      - 'script/check-i18n.py'
+      - '.github/workflows/i18n-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'entrypoints/**'
+      - 'public/_locales/**'
+      - 'script/check-i18n.py'
+      - '.github/workflows/i18n-check.yml'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check i18n coverage
+        run: python3 script/check-i18n.py
