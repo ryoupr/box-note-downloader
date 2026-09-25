@@ -8,7 +8,6 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 
 - 📥 開いている Box Note を Markdown (.md) に変換してダウンロード
 - 🖼️ 画像付きノートは ZIP（Markdown + assets/）で保存
-- ⚙️ 出力フォーマット選択（Markdown / HTML / Plain Text）
 - 📝 ファイル名パターンのカスタマイズ
 - 🚫 リアルタイム編集カーソル（他ユーザーのアバター等）を自動除外
 
@@ -94,6 +93,17 @@ npm run zip
 # アイコン生成
 ./script/generate-icons.sh source-icon.png
 ```
+
+### ブランチ運用
+
+- `feature/*` → `develop`: PR で結合・ビルド検証（`ci.yml` のみ、リリースなし）
+- `develop` → `main`: リリースPR（version bump はここでのみ行う）
+- `main` push: `release.yml` がビルド→GitHub Release→ストア提出を行う
+- `develop` → `main` のPRはストア審査中（`PENDING_REVIEW`）はマージ不可（`store-review-guard` がブロック）
+
+## リリース
+
+`develop` → `main` のリリースPRで `package.json` の `version` を上げてマージすると、自動で GitHub Release が作成され Chrome Web Store への提出が行われます。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
 
 ## 技術仕様
 

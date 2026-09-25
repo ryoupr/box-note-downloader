@@ -101,6 +101,27 @@
   "languageAuto": {
     "message": "自動（ブラウザの言語）"
   },
+  "settingDeveloperModeTitle": {
+    "message": "開発者モード"
+  },
+  "settingDeveloperModeDesc": {
+    "message": "デバッグ用機能を表示"
+  },
+  "settingFilenameHint": {
+    "message": "利用できる変数は"
+  },
+  "settingFilenameHelpLink": {
+    "message": "こちら"
+  },
+  "settingsBtnLabel": {
+    "message": "設定を開く"
+  },
+  "settingsBackLabel": {
+    "message": "戻る"
+  },
+  "debugDomBtn": {
+    "message": "🔍 DOMデバッグ"
+  },
   "helpLink": {
     "message": "ヘルプ"
   },

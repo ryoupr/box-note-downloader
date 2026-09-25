@@ -101,6 +101,27 @@
   "languageAuto": {
     "message": "Automático (idioma do navegador)"
   },
+  "settingDeveloperModeTitle": {
+    "message": "Modo desenvolvedor"
+  },
+  "settingDeveloperModeDesc": {
+    "message": "Mostrar recursos de depuração"
+  },
+  "settingFilenameHint": {
+    "message": "Variáveis disponíveis:"
+  },
+  "settingFilenameHelpLink": {
+    "message": "documentação"
+  },
+  "settingsBtnLabel": {
+    "message": "Abrir configurações"
+  },
+  "settingsBackLabel": {
+    "message": "Voltar"
+  },
+  "debugDomBtn": {
+    "message": "🔍 Depurar DOM"
+  },
   "helpLink": {
     "message": "Ajuda"
   },

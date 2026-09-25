@@ -35,8 +35,23 @@ async function saveSettings(s) {
   await chrome.storage.local.set({ settings: s });
 }
 
+// === Version (from manifest, single source of truth) ===
+function initVersion() {
+  try {
+    const { version } = chrome.runtime.getManifest();
+    if (version) {
+      document.querySelectorAll(".app-version").forEach((el) => {
+        el.textContent = `v${version}`;
+      });
+    }
+  } catch {
+    // Ignore: version display stays empty outside extension context
+  }
+}
+
 // === Init ===
 (async () => {
+  initVersion();
   await initLocale();
 
   // Initial dynamic text (kept out of data-i18n so language switching
@@ -71,11 +86,49 @@ async function saveSettings(s) {
   applySettingsToUI(s);
 })();
 
+// === Download progress (background → popup) ===
+let isDownloading = false;
+
+function resetProgress() {
+  const fill = document.getElementById("progress-fill");
+  if (fill) {
+    fill.classList.remove("determinate");
+    fill.style.width = "";
+  }
+  document.getElementById("dl-status").textContent = t("dlStatus");
+}
+
+function updateProgress(done, total, phase) {
+  const fill = document.getElementById("progress-fill");
+  const status = document.getElementById("dl-status");
+  if (!fill || !status) return;
+  const base = t("dlStatus");
+  if (phase === "zip") {
+    // Image fetch is done; zipping is fast — pin the bar at 100%
+    fill.classList.add("determinate");
+    fill.style.width = "100%";
+    status.textContent = base;
+    return;
+  }
+  const pct = total > 0 ? Math.min(100, Math.round((done / total) * 100)) : 0;
+  fill.classList.add("determinate");
+  fill.style.width = pct + "%";
+  status.textContent = `${base} ${done}/${total}`;
+}
+
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg?.action === "download-progress" && isDownloading) {
+    updateProgress(msg.done ?? 0, msg.total ?? 0, msg.phase);
+  }
+});
+
 // === Download ===
 document.getElementById("btn-download").addEventListener("click", async () => {
   const noteTitle = document.getElementById("note-title").textContent;
   showState("state-downloading");
   document.getElementById("dl-note-title").textContent = noteTitle;
+  isDownloading = true;
+  resetProgress();
 
   try {
     const settings = await loadSettings();
@@ -92,6 +145,8 @@ document.getElementById("btn-download").addEventListener("click", async () => {
     }
   } catch (e) {
     showError(noteTitle, e.message || t("errUnknown"));
+  } finally {
+    isDownloading = false;
   }
 });
 

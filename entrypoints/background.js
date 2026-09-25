@@ -29,6 +29,20 @@ export default defineBackground(() => {
     }
   });
 
+  // Progress notification: background → popup (popup may be closed, ignore errors)
+  function sendProgress(done, total, phase) {
+    try {
+      const p = chrome.runtime.sendMessage({
+        action: 'download-progress',
+        done,
+        total,
+        phase,
+      });
+      // MV3: returns a promise that rejects when no listener exists
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    } catch {}
+  }
+
   async function handleDownload(settings) {
     const {
       filename: filenamePattern = '{title}_{yyyy-mm-dd}',
@@ -118,11 +132,20 @@ export default defineBackground(() => {
         .slice(0, 100);
 
       // Filter images: only those with data, log errors
+      // Notify popup of real progress (done/total) during fetchImage loop
+      const fetchTotal = includeAssets ? images.length : 0;
+      if (fetchTotal > 0) sendProgress(0, fetchTotal, 'images');
       const successImages = [];
+      let fetchedCount = 0;
       for (const img of images) {
         if (img.data) {
           successImages.push(img);
+          if (fetchTotal > 0) {
+            fetchedCount++;
+            sendProgress(fetchedCount, fetchTotal, 'images');
+          }
         } else if (img.url) {
+          if (!includeAssets) continue;
           try {
             const fetched = await chrome.tabs.sendMessage(
               tab.id,
@@ -144,6 +167,9 @@ export default defineBackground(() => {
             }
           } catch (e) {
             log.verbose('Image fetch error:', img.filename, e.message);
+          } finally {
+            fetchedCount++;
+            sendProgress(fetchedCount, fetchTotal, 'images');
           }
         }
       }
@@ -175,7 +201,14 @@ export default defineBackground(() => {
           log.verbose('Added image:', img.filename);
         }
 
-        const base64 = await zip.generateAsync({ type: 'base64' });
+        const base64 = await zip.generateAsync(
+          { type: 'base64' },
+          (metadata) => {
+            // metadata.percent: 0-100 — keeps the bar alive during zip
+            // generation instead of sticking after the last image fetch
+            sendProgress(metadata.percent ?? 0, 100, 'zip');
+          },
+        );
         const dataUrl = 'data:application/zip;base64,' + base64;
         const filename = `${safeName}.zip`;
         await chrome.downloads.download({ url: dataUrl, filename, saveAs: true });

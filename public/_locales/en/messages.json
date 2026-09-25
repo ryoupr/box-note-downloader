@@ -101,6 +101,27 @@
   "languageAuto": {
     "message": "Auto (browser language)"
   },
+  "settingDeveloperModeTitle": {
+    "message": "Developer mode"
+  },
+  "settingDeveloperModeDesc": {
+    "message": "Show debugging features"
+  },
+  "settingFilenameHint": {
+    "message": "Available variables:"
+  },
+  "settingFilenameHelpLink": {
+    "message": "docs"
+  },
+  "settingsBtnLabel": {
+    "message": "Open settings"
+  },
+  "settingsBackLabel": {
+    "message": "Back"
+  },
+  "debugDomBtn": {
+    "message": "🔍 DOM Debug"
+  },
   "helpLink": {
     "message": "Help"
   },
