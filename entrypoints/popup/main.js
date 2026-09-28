@@ -1,5 +1,6 @@
 // Bundled by Vite: side-effect import registers globalThis.BoxNoteI18n.
 import './i18n.js';
+import { isBoxNoteUrl } from "./box-url.js";
 
 // === State Management ===
 function showState(id) {
@@ -62,7 +63,7 @@ function initVersion() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const url = tab?.url || "";
 
-  if (!url.match(/\.app\.box\.com\/notes\//)) {
+  if (!isBoxNoteUrl(url)) {
     showState("state-unsupported");
     // Load settings into UI even on unsupported state (for language select)
     const s0 = await loadSettings();
