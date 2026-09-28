@@ -14,7 +14,7 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 ## インストール
 
 ### Chrome Web Store から
-[Chrome Web Store](https://chrome.google.com/webstore/detail/xxx) からインストール
+[Chrome Web Store](https://chromewebstore.google.com/detail/boxnote-dl/aebdfmcknplcaioglfgddioipfgjohog) からインストール
 
 ### 開発版
 1. このリポジトリをクローン
