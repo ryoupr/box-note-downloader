@@ -24,7 +24,7 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 
 ## 使い方
 
-1. Box Note（`*.app.box.com/notes/*`）を開く
+1. Box Note（`app.box.com/notes/*` または独自サブドメインの `*.app.box.com/notes/*`）を開く
 2. 拡張機能アイコンをクリック
 3. 「Markdownでダウンロード」ボタンを押す
 
