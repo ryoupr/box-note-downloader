@@ -8,7 +8,7 @@ function showState(id) {
   document.getElementById(id).classList.add("active");
 }
 
-// === i18n (loaded via lib/i18n.js) ===
+// === i18n (loaded via ./i18n.js) ===
 let I18N = { locale: "en", t: (k) => k, messages: {} };
 
 async function initLocale() {
@@ -208,7 +208,11 @@ function applySettingsToUI(s) {
   document.getElementById("setting-notification").checked = s.notification;
   document.getElementById("setting-developer-mode").checked = !!s.developerMode;
   document.getElementById("setting-log-level").value = s.logLevel || "info";
-  document.getElementById("setting-language").value = s.uiLanguage || "auto";
+  // A language saved by an older version may no longer be shipped; the
+  // effective locale then follows the browser, so show "auto".
+  const lang = s.uiLanguage || "auto";
+  const supported = globalThis.BoxNoteI18n?.SUPPORTED ?? [];
+  document.getElementById("setting-language").value = supported.includes(lang) ? lang : "auto";
   updateDevOnlyVisibility(s.developerMode);
   updateFilenamePreview(s.filename, s.format);
 }
