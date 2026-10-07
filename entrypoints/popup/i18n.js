@@ -7,28 +7,24 @@
   "use strict";
 
   // Locales shipped in _locales/. Must match directory names exactly.
-  const SUPPORTED = ["en", "ja", "zh_CN", "es", "hi", "ar", "pt_BR", "ru", "bn"];
+  // Other browser languages fall back to English (default_locale).
+  const SUPPORTED = ["en", "ja"];
 
-  // Languages written right-to-left.
-  const RTL = ["ar"];
+  // Languages written right-to-left (none of the shipped locales).
+  const RTL = [];
 
   let cache = { locale: null, messages: null };
 
-  // Map a BCP-47 UI language (e.g. "zh-CN", "pt-BR", "en-US") to a shipped locale.
+  // Map a BCP-47 UI language (e.g. "ja-JP", "en-US") to a shipped locale.
   function resolveLocale(uiLang) {
     if (!uiLang) return "en";
     const norm = uiLang.replace("-", "_");
-    // Exact match (e.g. zh_CN, pt_BR)
+    // Exact match
     if (SUPPORTED.includes(norm)) return norm;
+    // Regional variants fall back to the base language if shipped (en_GB -> en)
     const lang = norm.split("_")[0].toLowerCase();
-    // Chinese variants default to Simplified
-    if (lang === "zh") return "zh_CN";
-    // Other variants fall back to the base language if shipped
     const base = SUPPORTED.find((l) => l.toLowerCase() === lang);
     if (base) return base;
-    // Prefix match for the remainder (e.g. es-419 -> es)
-    const prefix = SUPPORTED.find((l) => l.toLowerCase().startsWith(lang + "_"));
-    if (prefix) return prefix;
     return "en";
   }
 

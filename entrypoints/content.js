@@ -19,7 +19,9 @@ export default defineContentScript({
 
     chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       if (msg.action === 'convert') {
-        extractMarkdown().then(sendResponse);
+        extractMarkdown({ includeAssets: msg.includeAssets !== false }).then(
+          sendResponse,
+        );
         return true;
       }
       if (msg.action === 'dumpDOM') {
@@ -48,7 +50,7 @@ export default defineContentScript({
       return SKIP_SELECTORS.some((sel) => el.matches?.(sel));
     }
 
-    async function extractMarkdown() {
+    async function extractMarkdown({ includeAssets = true } = {}) {
       const images = [];
       let imgCounter = 0;
 
@@ -90,12 +92,25 @@ export default defineContentScript({
         editor.querySelectorAll('img[data-testid="img-element"]').length,
       );
 
+      // The editor's <img src> holds a signed URL that expires (~15 min after
+      // it was issued) and is never refreshed while the image stays loaded.
+      // Ask Box for fresh signed URLs (original resolution) right before the
+      // download; fall back to the DOM src if that fails.
+      // Images aren't downloaded when assets are off, so don't contact Box.
+      const freshUrls = includeAssets
+        ? await requestFreshSignedUrls(images.map((i) => i.url))
+        : new Map();
+
       // Don't fetch images here (CORS: notes.services → app.box.com blocked)
       // Return URLs for background/main-frame to fetch
-      const imageRefs = images.map((img) => ({
-        filename: img.filename,
-        url: img.url,
-      }));
+      const imageRefs = images.map((img) => {
+        const fresh = freshUrls.get(img.url);
+        return {
+          filename: img.filename,
+          url: fresh || img.url,
+          fallbackUrl: fresh ? img.url : undefined,
+        };
+      });
 
       return {
         markdown: markdown.trim(),
@@ -104,6 +119,7 @@ export default defineContentScript({
         debug: {
           directImgCount: directImgs.length,
           convertedImgCount: images.length,
+          refreshedUrlCount: freshUrls.size,
         },
       };
 
@@ -290,6 +306,137 @@ export default defineContentScript({
           if (i === 0) lines.push(`| ${Array(cols).fill('---').join(' | ')} |`);
         });
         return lines.join('\n') + '\n\n';
+      }
+    }
+
+    // Box Notes image URLs look like
+    //   https://<host>/app-api/child-objects/files/<fileId>/<namespace>/<childId>[/representations/...]?X-Box-Signature=...
+    function parseChildObjectUrl(src) {
+      try {
+        const u = new URL(src);
+        // Only Box web app hosts (same set as the content script matches)
+        if (u.protocol !== 'https:' || !isBoxAppHost(u.hostname)) return null;
+        const m = u.pathname.match(
+          /\/child-objects\/files\/(\d+)\/([^/]+)\/([^/?#]+)/,
+        );
+        if (!m) return null;
+        return {
+          fileId: m[1],
+          namespace: decodeURIComponent(m[2]),
+          childId: decodeURIComponent(m[3]),
+          hostname: u.hostname,
+        };
+      } catch {
+        return null;
+      }
+    }
+
+    function getCookie(name) {
+      for (const part of document.cookie.split(';')) {
+        const [k, ...v] = part.trim().split('=');
+        if (k === name) return v.join('=');
+      }
+      return '';
+    }
+
+    // Same endpoint the Box Notes editor itself uses (SCS signed requests).
+    // Only reachable same-origin from the notes.services.box.com frame.
+    const SCS_DOWNLOAD_ENDPOINT = '/scs/signed-requests-download';
+    const SCS_MAX_BATCH = 50;
+    // Don't let a stalled request block the 'convert' response forever
+    const SCS_TIMEOUT_MS = 10000;
+
+    function isBoxAppHost(hostname) {
+      return hostname === 'app.box.com' || hostname.endsWith('.app.box.com');
+    }
+
+    // Returns Map<original src, fresh signed URL of the original image>.
+    // Never throws: on any failure the map simply lacks that entry.
+    async function requestFreshSignedUrls(srcs) {
+      const result = new Map();
+      if (location.hostname !== 'notes.services.box.com') return result;
+
+      // Group by note file id (all images normally share one), and by child
+      // id so an image that appears twice is requested only once
+      const groups = new Map();
+      for (const src of srcs) {
+        const ref = parseChildObjectUrl(src);
+        if (!ref) continue;
+        const key = `${ref.fileId}|${ref.hostname}`;
+        if (!groups.has(key)) groups.set(key, { ...ref, children: new Map() });
+        const children = groups.get(key).children;
+        if (!children.has(ref.childId)) {
+          children.set(ref.childId, { ref, srcs: new Set() });
+        }
+        children.get(ref.childId).srcs.add(src);
+      }
+
+      const csrf = getCookie('csrf-token');
+      for (const group of groups.values()) {
+        const children = [...group.children.values()];
+        for (let i = 0; i < children.length; i += SCS_MAX_BATCH) {
+          const batch = children.slice(i, i + SCS_MAX_BATCH);
+          try {
+            const resp = await fetch(SCS_DOWNLOAD_ENDPOINT, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'csrf-token': csrf,
+              },
+              body: JSON.stringify({
+                fileId: group.fileId,
+                childIds: batch.map((c) => ({
+                  id: c.ref.childId,
+                  namespace: c.ref.namespace,
+                })),
+                // Notes opened through a shared link (/s/...) would need the
+                // link here; the iframe can't read the parent URL, so they are
+                // not supported and fall back to the DOM src.
+                sharedLink: '',
+                hostname: group.hostname,
+              }),
+              signal: AbortSignal.timeout(SCS_TIMEOUT_MS),
+            });
+            if (!resp.ok) {
+              console.warn('[BoxNote CS] Signed URL refresh failed: HTTP', resp.status);
+              continue;
+            }
+            const body = await resp.json();
+            const items = Array.isArray(body?.items) ? body.items : [];
+            for (const c of batch) {
+              const forChild = items.filter(
+                (it) => it?.childId === c.ref.childId && typeof it.url === 'string',
+              );
+              // Prefer the original (no /representations/); Box lists it first.
+              const best =
+                forChild.find((it) => !it.url.includes('/representations/')) ||
+                forChild[0];
+              if (best && isTrustedImageUrl(best.url, group.hostname)) {
+                for (const src of c.srcs) result.set(src, best.url);
+              }
+            }
+          } catch (err) {
+            console.warn('[BoxNote CS] Signed URL refresh error:', err?.message);
+          }
+        }
+      }
+      console.log(
+        '[BoxNote CS] Signed URLs refreshed:',
+        result.size,
+        '/',
+        srcs.length,
+      );
+      return result;
+    }
+
+    // Only accept https URLs on the same Box host as the original image.
+    function isTrustedImageUrl(url, hostname) {
+      try {
+        const u = new URL(url);
+        return u.protocol === 'https:' && u.hostname === hostname;
+      } catch {
+        return false;
       }
     }
 

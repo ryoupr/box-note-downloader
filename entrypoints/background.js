@@ -89,7 +89,7 @@ export default defineBackground(() => {
         try {
           const r = await chrome.tabs.sendMessage(
             tab.id,
-            { action: 'convert' },
+            { action: 'convert', includeAssets },
             { frameId: frame.frameId },
           );
           if (r?.markdown && !r.markdown.includes('Could not find')) {
@@ -147,11 +147,21 @@ export default defineBackground(() => {
         } else if (img.url) {
           if (!includeAssets) continue;
           try {
-            const fetched = await chrome.tabs.sendMessage(
-              tab.id,
-              { action: 'fetchImage', url: img.url },
-              { frameId: 0 },
-            );
+            // Fresh signed URL first, then the editor's DOM src as fallback
+            let fetched = null;
+            for (const url of [img.url, img.fallbackUrl].filter(Boolean)) {
+              try {
+                fetched = await chrome.tabs.sendMessage(
+                  tab.id,
+                  { action: 'fetchImage', url },
+                  { frameId: 0 },
+                );
+              } catch (e) {
+                // Still try the next candidate URL
+                fetched = { data: null, error: e.message };
+              }
+              if (fetched?.data) break;
+            }
             if (fetched?.data) {
               successImages.push({
                 filename: img.filename,

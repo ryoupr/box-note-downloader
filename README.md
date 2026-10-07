@@ -14,7 +14,7 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 ## インストール
 
 ### Chrome Web Store から
-[Chrome Web Store](https://chrome.google.com/webstore/detail/xxx) からインストール
+[Chrome Web Store](https://chromewebstore.google.com/detail/boxnote-dl/aebdfmcknplcaioglfgddioipfgjohog) からインストール
 
 ### 開発版
 1. このリポジトリをクローン
@@ -24,7 +24,7 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 
 ## 使い方
 
-1. Box Note（`*.app.box.com/notes/*`）を開く
+1. Box Note（`app.box.com/notes/*` または独自サブドメインの `*.app.box.com/notes/*`）を開く
 2. 拡張機能アイコンをクリック
 3. 「Markdownでダウンロード」ボタンを押す
 
@@ -39,7 +39,7 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 
 ⚙ ボタンから以下を設定可能：
 
-- **言語**: 自動（ブラウザの言語）/ English / 日本語 / 简体中文 / Español / हिन्दी / العربية / Português (Brasil) / Русский / বাংলা
+- **言語**: 自動（ブラウザの言語）/ English / 日本語
 - **ファイル名パターン**: `{title}_{yyyy-mm-dd}` 等
 - **添付ファイルを含める**: OFF で画像を無視して単体ファイル出力
 - **DL後に自動で開く**: ダウンロードフォルダを自動表示
@@ -58,22 +58,15 @@ Box Notes を Markdown 形式でダウンロードする Chrome 拡張機能で�
 
 ## 多言語対応
 
-9言語に対応（`_locales/` + `default_locale: en` の標準 `chrome.i18n` 方式）：
+英語と日本語に対応（`_locales/` + `default_locale: en` の標準 `chrome.i18n` 方式）：
 
 | 言語 | ロケール |
 |------|----------|
 | English（デフォルト） | `en` |
 | 日本語 | `ja` |
-| 简体中文 | `zh_CN` |
-| Español | `es` |
-| हिन्दी | `hi` |
-| العربية（RTL） | `ar` |
-| Português (Brasil) | `pt_BR` |
-| Русский | `ru` |
-| বাংলা | `bn` |
 
 - **デフォルト表示言語**: Chrome の UI 言語に自動追従（`chrome.i18n.getUILanguage()`）。未対応言語の場合は英語にフォールバック
-- **手動切替**: 設定画面の「言語」から変更可能（`chrome.storage.local` の `uiLanguage` に保存、`lib/i18n.js` が選択言語の `messages.json` を動的読込して即時反映）
+- **手動切替**: 設定画面の「言語」から変更可能（`chrome.storage.local` の `uiLanguage` に保存、`entrypoints/popup/i18n.js` が選択言語の `messages.json` を動的読込して即時反映）。以前のバージョンで英語・日本語以外を選んでいた場合は「自動」として扱う
 - **Chrome Web Store での表明**: `_locales/` を含めて公開すると、Developer Dashboard の Store listing タブで言語ごとの説明文・スクリーンショットを登録可能（詳細: https://developer.chrome.com/docs/webstore/cws-dashboard-listing ）
 
 ## 開発
@@ -108,8 +101,9 @@ npm run zip
 ## 技術仕様
 
 - Manifest V3
-- i18n: 標準 `chrome.i18n`（`_locales/` 9言語）+ 設定切替用カスタムレイヤー `lib/i18n.js`
+- i18n: 標準 `chrome.i18n`（`_locales/` 英語・日本語）+ 設定切替用カスタムレイヤー `entrypoints/popup/i18n.js`
 - Content Script: ProseMirror DOM → Markdown 変換
+- 画像: エディタの `<img src>` は約15分で失効する署名付き URL のまま更新されないため、ダウンロード直前に Box Notes と同じ `POST /scs/signed-requests-download` で原寸画像の署名付き URL を取り直す（失敗時は DOM の `src` で再試行。共有リンク経由のノートは未対応で、その場合は DOM の `src` を使う）
 - Background Service Worker: JSZip による ZIP 生成
 - 対象: `https://*.app.box.com/notes/*` + `https://notes.services.box.com/*`（iframe）
 
