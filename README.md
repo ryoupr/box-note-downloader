@@ -110,6 +110,7 @@ npm run zip
 - Manifest V3
 - i18n: 標準 `chrome.i18n`（`_locales/` 9言語）+ 設定切替用カスタムレイヤー `lib/i18n.js`
 - Content Script: ProseMirror DOM → Markdown 変換
+- 画像: エディタの `<img src>` は約15分で失効する署名付き URL のまま更新されないため、ダウンロード直前に Box Notes と同じ `POST /scs/signed-requests-download` で原寸画像の署名付き URL を取り直す（失敗時は DOM の `src` で再試行。共有リンク経由のノートは未対応で、その場合は DOM の `src` を使う）
 - Background Service Worker: JSZip による ZIP 生成
 - 対象: `https://*.app.box.com/notes/*` + `https://notes.services.box.com/*`（iframe）
 
