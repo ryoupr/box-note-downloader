@@ -92,7 +92,7 @@ export default defineBackground(() => {
             { action: 'convert', includeAssets },
             { frameId: frame.frameId },
           );
-          if (r?.markdown && !r.markdown.includes('Could not find')) {
+          if (r && !r.notFound) {
             log.info(
               'Content from frame',
               frame.frameId,
@@ -113,7 +113,7 @@ export default defineBackground(() => {
         } catch {}
       }
 
-      if (!result?.markdown) {
+      if (!result) {
         return {
           success: false,
           error: 'convert: Could not find Box Note content.',
