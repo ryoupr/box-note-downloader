@@ -56,16 +56,18 @@ export default defineContentScript({
 
       const title = document.title.replace(/ - Box$/, '').trim() || 'untitled';
 
+      // The title field is also .ProseMirror, and other open notes stay in the DOM in inactive pads.
+      const bodySelector = '.ProseMirror.content-container';
+      const candidates = [...document.querySelectorAll(bodySelector)].filter(
+        (el) => !el.closest('.pad[data-active-state="inactive"]'),
+      );
       const editor =
-        document.querySelector('.ProseMirror') ||
-        document.querySelector('[contenteditable="true"]');
+        document.querySelector(
+          `.pad[data-active-state="active"] ${bodySelector}`,
+        ) || (candidates.length === 1 ? candidates[0] : null);
 
       if (!editor) {
-        return {
-          markdown: '<!-- Could not find Box Note content -->',
-          images,
-          title,
-        };
+        return { notFound: true, markdown: '', images, title };
       }
 
       // Direct DOM query for debugging
